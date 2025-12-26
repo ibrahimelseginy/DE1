@@ -2,15 +2,16 @@
 
 :root {
   /* Midnight Blue Background */
-  --background: #0B1121; 
+  --background: #0B1121;
   /* Off-white Text */
-  --foreground: #F8FAFC; 
-  
+  --foreground: #F8FAFC;
+
   /* Custom Colors */
   --midnight-blue: #0B1121;
-  --matte-gold: #D4AF37;
-  --shiny-gold: #F59E0B; /* Amber 500 equivalent usually, or customized */
-  --card-bg: #111827; /* Gray 900 */
+  --matte-gold: #ebc97b;
+  --shiny-gold: #c89e4c;
+  --card-bg: #111827;
+  /* Gray 900 */
 }
 
 @theme inline {
@@ -20,7 +21,7 @@
   --color-gold: var(--matte-gold);
   --color-gold-shiny: var(--shiny-gold);
   --color-card: var(--card-bg);
-  
+
   --font-sans: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
 }
 

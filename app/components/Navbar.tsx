@@ -43,7 +43,7 @@ export default function Navbar() {
 
                 {/* CTA */}
                 <div className="hidden md:block">
-                    <button className="px-6 py-2.5 bg-gold text-midnight font-bold rounded-xl hover:bg-amber-400 transition-colors shadow-lg shadow-gold/10 text-sm">
+                    <button className="px-6 py-2.5 bg-gold text-midnight font-bold rounded-xl hover:bg-gold-shiny transition-colors shadow-lg shadow-gold/10 text-sm">
                         احجز حصتك
                     </button>
                 </div>

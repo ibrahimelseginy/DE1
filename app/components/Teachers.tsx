@@ -86,7 +86,7 @@ export default function Teachers() {
                                     {teacher.bio}
                                 </p>
 
-                                <button className="w-full py-4 bg-gold hover:bg-amber-400 text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 mt-auto">
+                                <button className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 mt-auto">
                                     احجز حصة مع المعلم
                                 </button>
                             </div>
