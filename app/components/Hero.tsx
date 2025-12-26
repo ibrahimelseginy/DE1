@@ -18,7 +18,7 @@ export default function Hero() {
                 >
                     <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gold/5 text-gold text-sm font-medium mb-8 border border-gold/10 backdrop-blur-sm">
                         <span>🚀</span>
-                        <span>ابدأ رحلتك نحو الإتقان اليوم</span>
+                        <span>ابدأ رحلتك في التعلم اليوم</span>
                     </div>
 
                     <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-8 leading-tight tracking-tight">
@@ -32,10 +32,10 @@ export default function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-10">
-                        <button className="group relative px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.2)] flex items-center gap-3">
+                        <a href="#teachers" className="group relative px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.2)] flex items-center gap-3">
                             احجز حصتك التجريبية الآن
                             <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                        </button>
+                        </a>
 
                         <button className="group px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 text-white hover:bg-white/10 font-medium text-lg rounded-2xl transition-all duration-300 flex items-center gap-3">
                             <span>لماذا DE1؟</span>

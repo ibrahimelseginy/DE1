@@ -1,13 +1,13 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, BookOpen, Briefcase, Compass } from 'lucide-react';
+import { MessageSquare, BookOpen, Briefcase, Compass } from 'lucide-react';
 
 const tracks = [
     {
         title: "المحادثة بطلاقة",
         desc: "اكسر حاجز الخوف وتحدث كمتحدث اصلي. نركز على تصحيح النطق، واكتساب التعبيرات اليومية من خلال ممارسة محادثات حقيقية طوال الحصة.",
-        icon: MessageCircle,
+        icon: MessageSquare,
     },
     {
         title: "التحضير للاختبارات الدولية",

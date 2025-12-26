@@ -1,23 +1,23 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, XCircle, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, User, Zap, PenTool } from 'lucide-react';
 
 const benefits = [
     {
         title: "منهج مفصل",
         desc: "محتوى مصمم خصيصاً لعلاج نقاط ضعفك.",
-        icon: "🎯"
+        icon: PenTool
     },
     {
         title: "انطلاق فوري",
         desc: "ابدأ دراستك فوراً بدون انتظار اكتمال العدد.",
-        icon: "⚡"
+        icon: Zap
     },
     {
         title: "تركيز كامل",
         desc: "المعلم لك وحدك بنسبة 100% طوال الحصة.",
-        icon: "👤"
+        icon: User
     }
 ];
 
@@ -38,8 +38,8 @@ export default function WhyUs({ id }: { id?: string }) {
                                 transition={{ delay: idx * 0.1 }}
                                 className="flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-gold/30 hover:bg-white/10 transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 rounded-full bg-midnight border border-white/10 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                                    {benefit.icon}
+                                <div className="w-12 h-12 rounded-full bg-midnight border border-white/10 flex items-center justify-center text-gold group-hover:scale-110 transition-transform">
+                                    <benefit.icon size={24} strokeWidth={1.5} />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-white mb-1 group-hover:text-gold transition-colors">{benefit.title}</h3>
