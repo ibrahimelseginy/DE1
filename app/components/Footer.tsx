@@ -82,8 +82,11 @@ export default function Footer() {
 
                 </div>
 
-                <div className="border-t border-white/5 mt-16 pt-8 text-center text-gray-600 text-sm">
-                    All Rights Reserved | DE1 Academy 2025 ©
+                <div className="border-t border-white/10 mt-16 pt-8 text-center">
+                    <p className="text-gray-500 text-sm flex items-center justify-center gap-2 flex-wrap" dir="ltr">
+                        All Rights Reserved DE1 Academy 2025 © |
+                        <img src="/forsa-logo.png" alt="Doers Logo" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+                    </p>
                 </div>
             </div>
         </footer>

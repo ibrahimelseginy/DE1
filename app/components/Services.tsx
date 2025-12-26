@@ -3,29 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, BookOpen, Briefcase, Compass } from 'lucide-react';
 
-const tracks = [
-    {
-        title: "المحادثة بطلاقة",
-        desc: "اكسر حاجز الخوف وتحدث كمتحدث اصلي. نركز على تصحيح النطق، واكتساب التعبيرات اليومية من خلال ممارسة محادثات حقيقية طوال الحصة.",
-        icon: MessageSquare,
-    },
-    {
-        title: "التحضير للاختبارات الدولية",
-        desc: "استعد لاجتياز اختبارات (IELTS, TOEFL, Goethe) بأقصر طريق. نوفر لك استراتيجيات الحل، محاكاة حقيقية لظروف الامتحان.",
-        icon: BookOpen,
-    },
-    {
-        title: "التجهيز لسوق العمل",
-        desc: "تعلم كيف تدير الاجتماعات، تكتب الإيميلات باحترافية، وتجتاز مقابلات العمل الدولية بكل ثقة في مجالك المهني.",
-        icon: Briefcase,
-    },
-    {
-        title: "صمم مسارك الخاص",
-        desc: "لم تجد ما تبحث عنه؟ إذا كان هدفك فريداً (مثل إلقاء المحاضرات أو السفر العاجل)، فنحن نبني لك منهجاً يخصك وحدك.",
-        icon: Compass,
-        special: true,
-    },
-];
+import { tracks } from '../data/tracks';
+import Link from 'next/link';
 
 export default function Services() {
     return (
@@ -67,9 +46,9 @@ export default function Services() {
                             </p>
 
                             <div className="pt-4 mt-auto border-t border-white/5 w-full">
-                                <button className="text-gold text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                                <Link href={`/tracks/${track.id}`} className="text-gold text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
                                     تفاصيل المسار <span className="text-lg">←</span>
-                                </button>
+                                </Link>
                             </div>
                         </motion.div>
                     ))}

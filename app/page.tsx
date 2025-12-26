@@ -4,6 +4,7 @@ import Journey from "./components/Journey";
 import WhyUs from "./components/WhyUs";
 import Services from "./components/Services";
 import Teachers from "./components/Teachers";
+import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import FloatingSocials from "./components/FloatingSocials";
 
@@ -18,6 +19,7 @@ export default function Home() {
       <Journey />
       <Services />
       <Teachers />
+      <Testimonials />
       <Footer />
       <FloatingSocials />
     </main>
