@@ -5,7 +5,7 @@ import WhyUs from "./components/WhyUs";
 import Services from "./components/Services";
 import Teachers from "./components/Teachers";
 import Footer from "./components/Footer";
-import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import FloatingSocials from "./components/FloatingSocials";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       <Services />
       <Teachers />
       <Footer />
-      <FloatingWhatsApp />
+      <FloatingSocials />
     </main>
   );
 }
