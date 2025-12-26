@@ -14,10 +14,10 @@ export default function Navbar() {
     }, []);
 
     const navLinks = [
-        { name: "الرئيسية", href: "#" },
-        { name: "لماذا DE1؟", href: "#why-us" },
-        { name: "المسارات", href: "#services" },
-        { name: "معلمونا", href: "#teachers" },
+        { name: "الرئيسية", href: "/" },
+        { name: "لماذا DE1؟", href: "/why-de1" },
+        { name: "المسارات", href: "/tracks" },
+        { name: "معلمونا", href: "/teachers" },
     ];
 
     return (
@@ -44,7 +44,7 @@ export default function Navbar() {
 
                 {/* CTA */}
                 <div className="hidden md:block">
-                    <a href="#teachers" className="px-6 py-2.5 bg-gold text-midnight font-bold rounded-xl hover:bg-gold-shiny transition-colors shadow-lg shadow-gold/10 text-sm">
+                    <a href="/teachers" className="px-6 py-2.5 bg-gold text-midnight font-bold rounded-xl hover:bg-gold-shiny transition-colors shadow-lg shadow-gold/10 text-sm">
                         احجز حصتك
                     </a>
                 </div>

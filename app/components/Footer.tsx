@@ -14,7 +14,7 @@ export default function Footer() {
                     <p className="text-xl text-gray-400 mb-10 font-light">
                         لا انتظار لاكتمال المجموعات.. ابدأ فوراً مع معلمك الخاص
                     </p>
-                    <a href="#teachers" className="px-10 py-5 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] flex items-center justify-center gap-3 mx-auto">
+                    <a href="/teachers" className="px-10 py-5 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] flex items-center justify-center gap-3 mx-auto">
                         احجز حصتك التجريبية الآن
                         <ArrowLeft className="w-6 h-6" />
                     </a>
@@ -45,10 +45,10 @@ export default function Footer() {
                     <div>
                         <h4 className="text-gold font-bold mb-6 text-lg">روابط سريعة</h4>
                         <ul className="space-y-4">
-                            <li><a href="#" className="text-gray-400 hover:text-gold transition-colors">الرئيسية</a></li>
-                            <li><a href="#why-us" className="text-gray-400 hover:text-gold transition-colors">لماذا DE1؟</a></li>
-                            <li><a href="#teachers" className="text-gray-400 hover:text-gold transition-colors">معلمونا</a></li>
-                            <li><a href="#booking" className="text-gray-400 hover:text-gold transition-colors">احجز حصتك</a></li>
+                            <li><a href="/" className="text-gray-400 hover:text-gold transition-colors">الرئيسية</a></li>
+                            <li><a href="/why-de1" className="text-gray-400 hover:text-gold transition-colors">لماذا DE1؟</a></li>
+                            <li><a href="/teachers" className="text-gray-400 hover:text-gold transition-colors">معلمونا</a></li>
+                            <li><a href="/teachers" className="text-gray-400 hover:text-gold transition-colors">احجز حصتك</a></li>
                         </ul>
                     </div>
 
