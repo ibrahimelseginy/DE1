@@ -6,8 +6,16 @@ import FloatingSocials from "../components/FloatingSocials";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, X } from 'lucide-react';
 
+interface Review {
+    name: string;
+    role: string;
+    content: string;
+    rating: number;
+    image: string;
+}
+
 export default function ReviewsPage() {
-    const [reviews, setReviews] = useState([]);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newReview, setNewReview] = useState({ name: '', role: '', content: '', rating: 5, image: '' });
 
