@@ -13,59 +13,59 @@ const initialReviews = [
         role: "مهندس برمجيات",
         content: "تجربة تعليمية ممتازة. لم أكن أتخيل أن أتحدث الألمانية بهذه الطلاقة في وقت قصير. التركيز على المحادثة كان هو المفتاح.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=ahmed"
+        image: "https://ui-avatars.com/api/?name=أحمد+محمد&background=c89e4c&color=0B1121"
     },
     {
         name: "سارة علي",
         role: "طبيبة",
         content: "كنت أحتاج لاجتياز اختبار B2 للسفر، وبفضل الله ثم DE1 Academy حققت الدرجة المطلوبة من أول محاولة. شكراً لكم!",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=sara"
+        image: "https://ui-avatars.com/api/?name=سارة+علي&background=c89e4c&color=0B1121"
     },
     {
         name: "عمر خالد",
         role: "طالب جامعي",
         content: "أفضل ما في الأكاديمية هو المرونة في المواعيد واختيار المعلم. لا يوجد ضغط، وأتعلم بالسرعة التي تناسبني.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=omar"
+        image: "https://ui-avatars.com/api/?name=عمر+خالد&background=c89e4c&color=0B1121"
     },
     {
         name: "منى احمد",
         role: "مصممة جرافيك",
         content: "المعلمون هنا محترفون جداً. يعرفون كيف يوصلون المعلومة ببساطة. أنصح أي شخص يريد تعلم لغة جديدة بالانضمام.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=mona"
+        image: "https://ui-avatars.com/api/?name=منى+احمد&background=c89e4c&color=0B1121"
     },
     {
         name: "يوسف ابراهيم",
         role: "رائد أعمال",
         content: "وقت هو المال بالنسبة لي. DE1 وفرت عليّ وقتاً طويلاً بفضل المنهج المخصص. تعلمت ما أحتاجه فقط لإدارة أعمالي مع شركاء أجانب.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=yousef"
+        image: "https://ui-avatars.com/api/?name=يوسف+ابراهيم&background=c89e4c&color=0B1121"
     },
     {
         name: "ليلى حسن",
         role: "طالبة ثانوية",
         content: "كنت خائفة جداً من التحدث، لكن المعلمة كانت صبورة جداً معي. الآن أتحدث بثقة كبيرة في المدرسة.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=laila"
+        image: "https://ui-avatars.com/api/?name=ليلى+حسن&background=c89e4c&color=0B1121"
     }
 ];
 
 export default function ReviewsPage() {
     const [reviews, setReviews] = useState(initialReviews);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newReview, setNewReview] = useState({ name: '', role: '', content: '', rating: 5 });
+    const [newReview, setNewReview] = useState({ name: '', role: '', content: '', rating: 5, image: '' });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const reviewToAdd = {
             ...newReview,
-            image: `https://i.pravatar.cc/150?u=${Math.random()}` // Random avatar
+            image: newReview.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(newReview.name)}&background=c89e4c&color=0B1121` // Use uploaded image or initials
         };
         setReviews([reviewToAdd, ...reviews]);
         setIsModalOpen(false);
-        setNewReview({ name: '', role: '', content: '', rating: 5 }); // Reset form
+        setNewReview({ name: '', role: '', content: '', rating: 5, image: '' }); // Reset form
         alert("شكراً لك! تم إضافة تقييمك بنجاح.");
     };
 
@@ -175,6 +175,21 @@ export default function ReviewsPage() {
                                     />
                                 </div>
                                 <div>
+                                    <label className="block text-gray-400 text-sm mb-2">صورة شخصية (اختياري)</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none transition-colors file:bg-gold file:text-midnight file:border-0 file:rounded-lg file:px-4 file:py-1 file:mr-4 file:font-semibold hover:file:bg-gold-shiny"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const imageUrl = URL.createObjectURL(file);
+                                                setNewReview({ ...newReview, image: imageUrl });
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div>
                                     <label className="block text-gray-400 text-sm mb-2">التقييم</label>
                                     <div className="flex gap-2">
                                         {[1, 2, 3, 4, 5].map((star) => (
@@ -186,8 +201,8 @@ export default function ReviewsPage() {
                                             >
                                                 <Star
                                                     className={`w-8 h-8 transition-colors ${star <= newReview.rating
-                                                            ? "text-gold fill-gold"
-                                                            : "text-gray-600 fill-none"
+                                                        ? "text-gold fill-gold"
+                                                        : "text-gray-600 fill-none"
                                                         }`}
                                                 />
                                             </button>
