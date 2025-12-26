@@ -38,7 +38,7 @@ export default function TracksPage() {
             </section>
 
             {/* How It Works (Roadmap) */}
-            <section className="py-20 relative">
+            <section className="pb-20 pt-0 relative">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-bold text-white mb-4">كيف تبدأ رحلتك معنا؟</h2>
@@ -86,11 +86,12 @@ export default function TracksPage() {
                         {tracks.map((track, idx) => (
                             <motion.div
                                 key={track.id}
+                                id={track.id}
                                 initial={{ opacity: 0, x: idx % 2 === 0 ? 50 : -50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5 }}
-                                className={`flex flex-col md:flex-row gap-6 bg-midnight border ${track.special ? 'border-[#c89e4c]/40 shadow-[0_0_30px_rgba(200,158,76,0.1)]' : 'border-white/10'} p-8 rounded-3xl group hover:bg-white/[0.02] transition-colors`}
+                                className={`flex flex-col md:flex-row gap-6 bg-midnight border ${track.special ? 'border-[#c89e4c]/40 shadow-[0_0_30px_rgba(200,158,76,0.1)]' : 'border-white/10'} p-8 rounded-3xl group hover:bg-white/[0.02] transition-colors scroll-mt-24`}
                             >
                                 <div className="flex-shrink-0">
                                     <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${track.special ? 'bg-[#c89e4c] text-midnight' : 'bg-white/10 text-[#c89e4c]'}`}>
@@ -116,15 +117,7 @@ export default function TracksPage() {
                                         ))}
                                     </div>
 
-                                    <div className="flex items-center gap-4">
-                                        <Link
-                                            href={`/tracks/${track.id}`}
-                                            className="px-6 py-2 bg-white/5 hover:bg-[#c89e4c] hover:text-midnight text-white border border-white/10 rounded-full transition-all text-sm font-bold flex items-center gap-2 group-hover/btn"
-                                        >
-                                            تفاصيل المسار
-                                            <ArrowLeft size={16} />
-                                        </Link>
-                                    </div>
+
                                 </div>
                             </motion.div>
                         ))}

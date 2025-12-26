@@ -9,21 +9,21 @@ const testimonials = [
         role: "مهندس برمجيات",
         content: "تجربة تعليمية ممتازة. لم أكن أتخيل أن أتحدث الألمانية بهذه الطلاقة في وقت قصير. التركيز على المحادثة كان هو المفتاح.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=ahmed"
+        image: "https://ui-avatars.com/api/?name=أحمد+محمد&background=c89e4c&color=0B1121"
     },
     {
         name: "سارة علي",
         role: "طبيبة",
         content: "كنت أحتاج لاجتياز اختبار B2 للسفر، وبفضل الله ثم DE1 Academy حققت الدرجة المطلوبة من أول محاولة. شكراً لكم!",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=sara"
+        image: "https://ui-avatars.com/api/?name=سارة+علي&background=c89e4c&color=0B1121"
     },
     {
         name: "عمر خالد",
         role: "طالب جامعي",
         content: "أفضل ما في الأكاديمية هو المرونة في المواعيد واختيار المعلم. لا يوجد ضغط، وأتعلم بالسرعة التي تناسبني.",
         rating: 5,
-        image: "https://i.pravatar.cc/150?u=omar"
+        image: "https://ui-avatars.com/api/?name=عمر+خالد&background=c89e4c&color=0B1121"
     }
 ];
 

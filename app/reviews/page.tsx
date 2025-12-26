@@ -6,67 +6,55 @@ import FloatingSocials from "../components/FloatingSocials";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, X } from 'lucide-react';
 
-// Extended reviews data (mock data for now)
-const initialReviews = [
-    {
-        name: "أحمد محمد",
-        role: "مهندس برمجيات",
-        content: "تجربة تعليمية ممتازة. لم أكن أتخيل أن أتحدث الألمانية بهذه الطلاقة في وقت قصير. التركيز على المحادثة كان هو المفتاح.",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=أحمد+محمد&background=c89e4c&color=0B1121"
-    },
-    {
-        name: "سارة علي",
-        role: "طبيبة",
-        content: "كنت أحتاج لاجتياز اختبار B2 للسفر، وبفضل الله ثم DE1 Academy حققت الدرجة المطلوبة من أول محاولة. شكراً لكم!",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=سارة+علي&background=c89e4c&color=0B1121"
-    },
-    {
-        name: "عمر خالد",
-        role: "طالب جامعي",
-        content: "أفضل ما في الأكاديمية هو المرونة في المواعيد واختيار المعلم. لا يوجد ضغط، وأتعلم بالسرعة التي تناسبني.",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=عمر+خالد&background=c89e4c&color=0B1121"
-    },
-    {
-        name: "منى احمد",
-        role: "مصممة جرافيك",
-        content: "المعلمون هنا محترفون جداً. يعرفون كيف يوصلون المعلومة ببساطة. أنصح أي شخص يريد تعلم لغة جديدة بالانضمام.",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=منى+احمد&background=c89e4c&color=0B1121"
-    },
-    {
-        name: "يوسف ابراهيم",
-        role: "رائد أعمال",
-        content: "وقت هو المال بالنسبة لي. DE1 وفرت عليّ وقتاً طويلاً بفضل المنهج المخصص. تعلمت ما أحتاجه فقط لإدارة أعمالي مع شركاء أجانب.",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=يوسف+ابراهيم&background=c89e4c&color=0B1121"
-    },
-    {
-        name: "ليلى حسن",
-        role: "طالبة ثانوية",
-        content: "كنت خائفة جداً من التحدث، لكن المعلمة كانت صبورة جداً معي. الآن أتحدث بثقة كبيرة في المدرسة.",
-        rating: 5,
-        image: "https://ui-avatars.com/api/?name=ليلى+حسن&background=c89e4c&color=0B1121"
-    }
-];
-
 export default function ReviewsPage() {
-    const [reviews, setReviews] = useState(initialReviews);
+    const [reviews, setReviews] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newReview, setNewReview] = useState({ name: '', role: '', content: '', rating: 5, image: '' });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    React.useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const res = await fetch('/api/reviews');
+                if (res.ok) {
+                    const data = await res.json();
+                    setReviews(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch reviews", error);
+            }
+        };
+        fetchReviews();
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const reviewToAdd = {
             ...newReview,
-            image: newReview.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(newReview.name)}&background=c89e4c&color=0B1121` // Use uploaded image or initials
+            image: newReview.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(newReview.name)}&background=c89e4c&color=0B1121`
         };
-        setReviews([reviewToAdd, ...reviews]);
-        setIsModalOpen(false);
-        setNewReview({ name: '', role: '', content: '', rating: 5, image: '' }); // Reset form
-        alert("شكراً لك! تم إضافة تقييمك بنجاح.");
+
+        try {
+            const res = await fetch('/api/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewToAdd),
+            });
+
+            if (res.ok) {
+                const updatedReviews = await res.json();
+                setReviews(updatedReviews);
+                setIsModalOpen(false);
+                setNewReview({ name: '', role: '', content: '', rating: 5, image: '' });
+                alert("شكراً لك! تم إضافة تقييمك بنجاح.");
+            } else {
+                alert(" حدث خطأ أثناء حفظ التقييم. حاول مرة أخرى.");
+            }
+        } catch (error) {
+            console.error("Error submitting review", error);
+            alert("حدث خطأ في الاتصال.");
+        }
     };
 
     return (
