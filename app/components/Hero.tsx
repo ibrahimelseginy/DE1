@@ -21,10 +21,10 @@ export default function Hero() {
                         <span>ابدأ رحلتك نحو الإتقان اليوم</span>
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight tracking-tight">
                         <span className="text-white block mb-2">لأن أهدافك ليست كغيرك..</span>
                         <span className="text-gold block drop-shadow-sm">دورات لغة (مُفصّلة)</span>
-                        <span className="text-white block mt-2 text-3xl md:text-5xl">على مقاسك تماماً</span>
+                        <span className="text-white block mt-2 text-2xl md:text-4xl">على مقاسك تماماً</span>
                     </h1>
 
                     <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
