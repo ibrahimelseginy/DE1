@@ -67,7 +67,7 @@ export default function TrackDetails({ params }: { params: { id: string } }) {
                                 <a href="/teachers" className="flex-1 bg-gold hover:bg-gold-shiny text-midnight font-bold py-4 px-8 rounded-xl transition-all text-center text-lg">
                                     ابدأ هذا المسار الآن
                                 </a>
-                                <a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noopener noreferrer" className="flex-1 bg-white/5 hover:bg-white/10 text-white font-medium py-4 px-8 rounded-xl transition-all text-center text-lg border border-white/10">
+                                <a href="https://wa.me/201555822735" target="_blank" rel="noopener noreferrer" className="flex-1 bg-white/5 hover:bg-white/10 text-white font-medium py-4 px-8 rounded-xl transition-all text-center text-lg border border-white/10">
                                     استفسر عن المسار
                                 </a>
                             </div>

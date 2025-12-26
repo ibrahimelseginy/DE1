@@ -23,7 +23,7 @@ export default function Hero() {
 
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-lalezar mb-8 leading-tight tracking-wider">
                         <span className="text-white block mb-2">لأن أهدافك ليست كغيرك..</span>
-                        <span className="text-gold block drop-shadow-sm">دورات لغة (مُفصّلة)</span>
+                        <span className="bg-gradient-to-r from-[#D4AF37] via-[#F2D06B] to-[#D4AF37] bg-clip-text text-transparent block drop-shadow-sm pb-2">دورات لغة (مُفصّلة)</span>
                         <span className="text-white block mt-2 text-xl md:text-3xl font-sans font-bold">على مقاسك تماماً</span>
                     </h1>
 

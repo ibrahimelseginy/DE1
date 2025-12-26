@@ -70,7 +70,7 @@ export default function WhyUs({ id }: { id?: string }) {
                         </p>
 
                         <div className="flex flex-wrap gap-4">
-                            <a href="/why-de1" className="px-8 py-4 bg-transparent border border-gray-600 text-white hover:border-gold hover:text-gold rounded-xl transition-all duration-300 flex items-center gap-3">
+                            <a href="/why-de1" className="px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg shadow-gold/10">
                                 اكتشف الفارق بنفسك (المقارنة الكاملة)
                                 <ArrowLeft className="w-5 h-5" />
                             </a>

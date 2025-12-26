@@ -32,7 +32,7 @@ export default function Footer() {
                             لأن أهدافك ليست كغيرك. نحن نبني لك مساراً تعليمياً يركز (فقط) على ما تحتاجه للوصول لهدفك.
                         </p>
                         <div className="flex items-center gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold hover:text-midnight transition-all">
+                            <a href="https://www.instagram.com/de1.academy?igsh=MXVjb3FqenpvOHVpNw==" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold hover:text-midnight transition-all">
                                 <Instagram size={20} />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold hover:text-midnight transition-all">
@@ -69,10 +69,10 @@ export default function Footer() {
                         <div className="flex flex-col gap-4 text-gray-400 items-center md:items-start">
                             <div className="flex items-center gap-3">
                                 <Smartphone size={20} className="text-gold" />
-                                <span dir="ltr">+20 128 905 0022</span>
+                                <span dir="ltr">+20 155 582 2735</span>
                             </div>
                             <div className="mt-4">
-                                <a href="https://wa.me/201289050022" className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors font-medium">
+                                <a href="https://wa.me/201555822735" className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors font-medium">
                                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                                     استشارة تعليمية مجانية
                                 </a>
@@ -83,9 +83,9 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 mt-16 pt-8 text-center">
-                    <p className="text-gray-500 text-sm flex items-center justify-center gap-2 flex-wrap" dir="ltr">
-                        All Rights Reserved DE1 Academy 2025 © |
-                        <img src="/forsa-logo.png" alt="Doers Logo" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+                    <p className="text-white text-sm flex items-center justify-center gap-4 flex-wrap opacity-80 hover:opacity-100 transition-opacity" dir="ltr">
+                        All Rights Reserved DE1 Academy 2025 © <span className="text-gold">|</span>
+                        <img src="/forsa-logo.png" alt="Doers Logo" className="h-8 md:h-10 brightness-0 invert opacity-100" />
                     </p>
                 </div>
             </div>

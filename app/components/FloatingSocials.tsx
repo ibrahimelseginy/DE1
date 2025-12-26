@@ -10,7 +10,7 @@ export default function FloatingSocials() {
 
                 {/* Instagram */}
                 <a
-                    href="#"
+                    href="https://www.instagram.com/de1.academy?igsh=MXVjb3FqenpvOHVpNw=="
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gold hover:text-white transition-colors duration-300 transform hover:scale-110"
@@ -23,7 +23,7 @@ export default function FloatingSocials() {
 
                 {/* WhatsApp */}
                 <a
-                    href="https://wa.me/201289050022"
+                    href="https://wa.me/201555822735"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gold hover:text-white transition-colors duration-300 transform hover:scale-110 relative"

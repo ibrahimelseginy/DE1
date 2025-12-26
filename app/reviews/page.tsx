@@ -1,13 +1,13 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingSocials from "../components/FloatingSocials";
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, Quote, X } from 'lucide-react';
 
 // Extended reviews data (mock data for now)
-const allReviews = [
+const initialReviews = [
     {
         name: "أحمد محمد",
         role: "مهندس برمجيات",
@@ -53,6 +53,22 @@ const allReviews = [
 ];
 
 export default function ReviewsPage() {
+    const [reviews, setReviews] = useState(initialReviews);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newReview, setNewReview] = useState({ name: '', role: '', content: '', rating: 5 });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const reviewToAdd = {
+            ...newReview,
+            image: `https://i.pravatar.cc/150?u=${Math.random()}` // Random avatar
+        };
+        setReviews([reviewToAdd, ...reviews]);
+        setIsModalOpen(false);
+        setNewReview({ name: '', role: '', content: '', rating: 5 }); // Reset form
+        alert("شكراً لك! تم إضافة تقييمك بنجاح.");
+    };
+
     return (
         <main className="min-h-screen bg-midnight text-foreground font-sans selection:bg-gold selection:text-midnight overflow-x-hidden">
             <Navbar />
@@ -72,7 +88,7 @@ export default function ReviewsPage() {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {allReviews.map((review, idx) => (
+                        {reviews.map((review, idx) => (
                             <motion.div
                                 key={idx}
                                 initial={{ opacity: 0, scale: 0.9 }}
@@ -104,16 +120,97 @@ export default function ReviewsPage() {
                         ))}
                     </div>
 
-                    {/* Submit Review CTA (Optional) */}
+                    {/* Submit Review CTA */}
                     <div className="mt-20 text-center bg-white/5 border border-white/10 rounded-3xl p-12 max-w-4xl mx-auto backdrop-blur-sm">
                         <h3 className="text-2xl font-bold text-white mb-4">هل أنت طالب حالي في DE1 Academy؟</h3>
                         <p className="text-gray-400 mb-8">شاركنا تجربتك وساعد الآخرين في اتخاذ القرار الصحيح.</p>
-                        <button className="px-8 py-3 bg-gold text-midnight font-bold rounded-xl hover:bg-gold-shiny transition-colors">
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="px-8 py-3 bg-gold text-midnight font-bold rounded-xl hover:bg-gold-shiny transition-colors text-lg" // Increased text size slightly
+                        >
                             أضف تقييمك
                         </button>
                     </div>
                 </div>
             </section>
+
+            {/* Review Modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-midnight/80 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-midnight border border-white/10 rounded-2xl p-8 max-w-lg w-full shadow-2xl relative"
+                        >
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors"
+                            >
+                                <X size={24} />
+                            </button>
+
+                            <h3 className="text-2xl font-lalezar text-white mb-6 text-center">أضف تقييمك</h3>
+
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-400 text-sm mb-2">الاسم</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none transition-colors"
+                                        value={newReview.name}
+                                        onChange={e => setNewReview({ ...newReview, name: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm mb-2">الوظيفة / الدراسة</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none transition-colors"
+                                        value={newReview.role}
+                                        onChange={e => setNewReview({ ...newReview, role: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm mb-2">التقييم</label>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3, 4, 5].map(star => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setNewReview({ ...newReview, rating: star })}
+                                                className={`transition-colors ${star <= newReview.rating ? 'text-gold fill-gold' : 'text-gray-600'}`}
+                                            >
+                                                <Star className="w-6 h-6 fill-current" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm mb-2">رأيك</label>
+                                    <textarea
+                                        required
+                                        rows={4}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none transition-colors resize-none"
+                                        value={newReview.content}
+                                        onChange={e => setNewReview({ ...newReview, content: e.target.value })}
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-gold hover:bg-gold-shiny text-midnight font-bold py-4 rounded-xl transition-colors mt-4"
+                                >
+                                    نشر التقييم
+                                </button>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             <Footer />
             <FloatingSocials />
