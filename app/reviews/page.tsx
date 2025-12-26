@@ -177,14 +177,19 @@ export default function ReviewsPage() {
                                 <div>
                                     <label className="block text-gray-400 text-sm mb-2">التقييم</label>
                                     <div className="flex gap-2">
-                                        {[1, 2, 3, 4, 5].map(star => (
+                                        {[1, 2, 3, 4, 5].map((star) => (
                                             <button
                                                 key={star}
                                                 type="button"
                                                 onClick={() => setNewReview({ ...newReview, rating: star })}
-                                                className={`transition-colors ${star <= newReview.rating ? 'text-gold fill-gold' : 'text-gray-600'}`}
+                                                className="transition-transform hover:scale-110 focus:outline-none"
                                             >
-                                                <Star className="w-6 h-6 fill-current" />
+                                                <Star
+                                                    className={`w-8 h-8 transition-colors ${star <= newReview.rating
+                                                            ? "text-gold fill-gold"
+                                                            : "text-gray-600 fill-none"
+                                                        }`}
+                                                />
                                             </button>
                                         ))}
                                     </div>

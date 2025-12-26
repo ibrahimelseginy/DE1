@@ -1,4 +1,3 @@
-"use client";
 import React from 'react';
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -7,6 +6,12 @@ import { tracks } from '../../data/tracks';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+    return tracks.map((track) => ({
+        id: track.id,
+    }));
+}
 
 export default function TrackDetails({ params }: { params: { id: string } }) {
     const track = tracks.find(t => t.id === params.id);

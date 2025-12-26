@@ -14,7 +14,7 @@ export default function Footer() {
                     <p className="text-xl text-gray-400 mb-10 font-light">
                         لا انتظار لاكتمال المجموعات.. ابدأ فوراً مع معلمك الخاص
                     </p>
-                    <a href="/teachers" className="px-10 py-5 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] flex items-center justify-center gap-3 mx-auto">
+                    <a href="/teachers" className="px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] inline-flex items-center justify-center gap-3 mx-auto">
                         احجز حصتك التجريبية الآن
                         <ArrowLeft className="w-3 h-3 relative top-[1px]" />
                     </a>
@@ -67,10 +67,10 @@ export default function Footer() {
                     <div>
                         <h4 className="text-gold font-bold mb-6 text-lg">معلومات التواصل</h4>
                         <div className="flex flex-col gap-4 text-gray-400 items-center md:items-start">
-                            <div className="flex items-center gap-3">
-                                <Smartphone size={20} className="text-gold" />
-                                <span dir="ltr">+20 155 582 2735</span>
-                            </div>
+                            <a href="tel:+201555822735" className="flex items-center gap-3 hover:text-white transition-colors group">
+                                <Smartphone size={20} className="text-gold group-hover:text-white transition-colors" />
+                                <span dir="ltr" className="group-hover:text-gold transition-colors">+20 155 582 2735</span>
+                            </a>
                             <div className="mt-4">
                                 <a href="https://wa.me/201555822735" className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors font-medium">
                                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
