@@ -59,7 +59,7 @@ export default function WhyUs({ id }: { id?: string }) {
                         <div className="inline-block px-4 py-1 rounded-full border border-gold/20 text-gold text-sm font-medium mb-6">
                             لماذا نحن؟
                         </div>
-                        <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-8">
+                        <h2 className="text-4xl md:text-6xl font-lalezar leading-tight mb-8">
                             <span className="text-white">لأننا لا نشبه الآخرين</span>
                             <br />
                             <span className="text-gold">في أي شيء..</span>
@@ -70,10 +70,10 @@ export default function WhyUs({ id }: { id?: string }) {
                         </p>
 
                         <div className="flex flex-wrap gap-4">
-                            <button className="px-8 py-4 bg-transparent border border-gray-600 text-white hover:border-gold hover:text-gold rounded-xl transition-all duration-300 flex items-center gap-3">
+                            <a href="/why-de1" className="px-8 py-4 bg-transparent border border-gray-600 text-white hover:border-gold hover:text-gold rounded-xl transition-all duration-300 flex items-center gap-3">
                                 اكتشف الفارق بنفسك (المقارنة الكاملة)
                                 <ArrowLeft className="w-5 h-5" />
-                            </button>
+                            </a>
                         </div>
                     </motion.div>
 

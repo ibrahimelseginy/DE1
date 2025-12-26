@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -24,22 +26,27 @@ export default function Navbar() {
         <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-midnight/90 backdrop-blur-md py-4 shadow-lg border-b border-white/5' : 'bg-transparent py-6'}`}>
             <div className="container mx-auto px-4 flex items-center justify-between">
                 {/* Logo */}
-                {/* Logo */}
                 <Link href="/" className="text-2xl md:text-3xl font-bold text-gold tracking-tight hover:text-white transition-colors">
                     DE1 Academy
                 </Link>
 
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8 bg-white/5 px-8 py-3 rounded-full border border-white/5 backdrop-blur-sm">
-                    {navLinks.map(link => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            className={`text-sm font-medium transition-colors ${link.name === "الرئيسية" ? "text-gold" : "text-gray-300 hover:text-white"}`}
-                        >
-                            {link.name}
-                        </a>
-                    ))}
+                    {navLinks.map(link => {
+                        const isActive = pathname === link.href;
+                        return (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                className={`text-sm font-medium transition-colors relative py-1 ${isActive ? "text-gold font-bold" : "text-gray-300 hover:text-white"}`}
+                            >
+                                {link.name}
+                                {isActive && (
+                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold rounded-full shadow-[0_0_8px_rgba(212,175,55,0.5)]"></span>
+                                )}
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* CTA */}

@@ -16,7 +16,7 @@ export default function Footer() {
                     </p>
                     <a href="/teachers" className="px-10 py-5 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] flex items-center justify-center gap-3 mx-auto">
                         احجز حصتك التجريبية الآن
-                        <ArrowLeft className="w-4 h-4" />
+                        <ArrowLeft className="w-3 h-3 relative top-[1px]" />
                     </a>
                 </div>
             </div>

@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Alexandria } from "next/font/google";
+import { Alexandria, Lalezar } from "next/font/google";
 import "./globals.css";
 
 const alexandria = Alexandria({
   variable: "--font-alexandria",
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700", "800"], // Added weights for variety
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const lalezar = Lalezar({
+  variable: "--font-lalezar",
+  subsets: ["arabic", "latin"],
+  weight: ["400"], // Lalezar only has 400
 });
 
 export const metadata: Metadata = {
@@ -21,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body
-        className={`${alexandria.variable} antialiased bg-midnight text-foreground`}
+        className={`${alexandria.variable} ${lalezar.variable} antialiased bg-midnight text-foreground`}
       >
         {children}
       </body>

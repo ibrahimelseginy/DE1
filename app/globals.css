@@ -23,6 +23,7 @@
   --color-card: var(--card-bg);
 
   --font-sans: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
+  --font-lalezar: var(--font-lalezar), system-ui;
 }
 
 body {

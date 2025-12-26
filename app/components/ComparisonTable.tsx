@@ -72,7 +72,7 @@ export default function ComparisonTable() {
                     <span className="text-gold font-medium text-sm border border-gold/20 px-4 py-1.5 rounded-full mb-4 inline-block">
                         مقارنة شاملة
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                    <h2 className="text-3xl md:text-5xl font-lalezar text-white mb-6">
                         لماذا تفشل الطرق التقليدية <br /> <span className="text-gold">وينجح أسلوبنا؟</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-lg hover:text-gray-300 transition-colors">
