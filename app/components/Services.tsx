@@ -45,11 +45,7 @@ export default function Services() {
                                 {track.desc}
                             </p>
 
-                            <div className="pt-4 mt-auto border-t border-white/5 w-full">
-                                <Link href={`/tracks/${track.id}`} className="text-gold text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
-                                    تفاصيل المسار <span className="text-lg">←</span>
-                                </Link>
-                            </div>
+
                         </motion.div>
                     ))}
                 </div>
