@@ -2,26 +2,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, User, Zap, PenTool } from 'lucide-react';
-
-const benefits = [
-    {
-        title: "منهج مفصل",
-        desc: "محتوى مصمم خصيصاً لعلاج نقاط ضعفك.",
-        icon: PenTool
-    },
-    {
-        title: "انطلاق فوري",
-        desc: "ابدأ دراستك فوراً بدون انتظار اكتمال العدد.",
-        icon: Zap
-    },
-    {
-        title: "تركيز كامل",
-        desc: "المعلم لك وحدك بنسبة 100% طوال الحصة.",
-        icon: User
-    }
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WhyUs({ id }: { id?: string }) {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
+
+    const benefits = [
+        {
+            title: t.whyUs.cards.custom.title,
+            desc: t.whyUs.cards.custom.desc,
+            icon: PenTool
+        },
+        {
+            title: t.whyUs.cards.instant.title,
+            desc: t.whyUs.cards.instant.desc,
+            icon: Zap
+        },
+        {
+            title: t.whyUs.cards.focus.title,
+            desc: t.whyUs.cards.focus.desc,
+            icon: User
+        }
+    ];
+
     return (
         <section className="py-24 bg-midnight relative" id={id}>
             <div className="container mx-auto px-4">
@@ -32,7 +36,7 @@ export default function WhyUs({ id }: { id?: string }) {
                         {benefits.map((benefit, idx) => (
                             <motion.div
                                 key={idx}
-                                initial={{ opacity: 0, x: -30 }}
+                                initial={{ opacity: 0, x: isRTL ? -30 : 30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: idx * 0.1 }}
@@ -51,28 +55,29 @@ export default function WhyUs({ id }: { id?: string }) {
 
                     {/* Right Side: Content */}
                     <motion.div
-                        initial={{ opacity: 0, x: 30 }}
+                        initial={{ opacity: 0, x: isRTL ? 30 : -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="text-right"
+                        dir={isRTL ? "rtl" : "ltr"}
                     >
                         <div className="inline-block px-4 py-1 rounded-full border border-gold/20 text-gold text-sm font-medium mb-6">
-                            لماذا نحن؟
+                            {t.whyUs.badge}
                         </div>
                         <h2 className="text-4xl md:text-6xl font-lalezar leading-tight mb-8">
-                            <span className="text-white">لأننا لا نشبه الآخرين</span>
+                            <span className="text-white">{t.whyUs.titlePart1}</span>
                             <br />
-                            <span className="text-gold">في أي شيء..</span>
+                            <span className="text-gold">{t.whyUs.titlePart2}</span>
                         </h2>
 
                         <p className="text-gray-300 text-lg leading-relaxed mb-10">
-                            في الأكاديميات التقليدية، أنت جزء من "مجموعة". في <span className="text-gold font-bold">DE1 Academy</span>، أنت "المركز". نظامنا التعليمي صُمم ليحل كل المشاكل التي واجهتك سابقاً، ويوفر عليك سنوات من المحاولات غير المجدية.
+                            {t.whyUs.description}
                         </p>
 
                         <div className="flex flex-wrap gap-4">
                             <a href="/why-de1" className="px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg shadow-gold/10">
-                                اكتشف الفارق بنفسك (المقارنة الكاملة)
-                                <ArrowLeft className="w-5 h-5" />
+                                {t.whyUs.ctaCompare}
+                                <ArrowLeft className={`w-5 h-5 ${!isRTL ? 'rotate-180' : ''}`} />
                             </a>
                         </div>
                     </motion.div>

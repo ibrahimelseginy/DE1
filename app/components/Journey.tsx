@@ -2,39 +2,42 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, UserCheck, PenTool, Zap } from 'lucide-react';
-
-const steps = [
-    {
-        id: "01",
-        titleEn: "Discovery & Goals",
-        titleAr: "تحديد الوجهة",
-        description: "لا نبدأ بالتدريس فوراً؛ بل نبدأ بحصة تجريبية أقرب لجلسة استشارية لنفهم هدفك (سفر، عمل، أو طلاقة عامة) ونحدد مستواك الحالي بدقة.",
-        icon: Compass,
-    },
-    {
-        id: "02",
-        titleEn: "Teacher Matching",
-        titleAr: "اختيار رفيق الرحلة",
-        description: "نرشح لك المعلم الأنسب لشخصيتك وأهدافك من بين نخبة مدرسينا المعتمدين، مع فرصة اختيار المدرس بنفسك.",
-        icon: UserCheck,
-    },
-    {
-        id: "03",
-        titleEn: "Customized Curriculum",
-        titleAr: "تفصيل المنهج",
-        description: "هنا نطبق شعارنا؛ نصمم لك محتوى تعليمياً (مُفصّلاً) يركز فقط على احتياجاتك، بعيداً عن حشو المناهج التقليدية.",
-        icon: PenTool,
-    },
-    {
-        id: "04",
-        titleEn: "Instant Start",
-        titleAr: "الانطلاق الفوري",
-        description: "لا انتظار لاكتمال مجموعات؛ تبدأ حصتك الأولى (1-on-1) فوراً وفي المواعيد التي تختارها بنفسك بكل مرونة.",
-        icon: Zap,
-    },
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Journey() {
+    const { t, language } = useLanguage();
+
+    const steps = [
+        {
+            id: t.journey.steps.discovery.step,
+            titleEn: "Discovery & Goals", // Keeping original for style or maybe translate? style says "font-serif tracking-wide", likely English style. Let's keep titleEn separate if needed but user asked for full translation. The previous code had `titleEn` and `titleAr`. I'll just use one title from `t`.
+            title: t.journey.steps.discovery.title,
+            description: t.journey.steps.discovery.desc,
+            icon: Compass,
+        },
+        {
+            id: t.journey.steps.matching.step,
+            titleEn: "Teacher Matching",
+            title: t.journey.steps.matching.title,
+            description: t.journey.steps.matching.desc,
+            icon: UserCheck,
+        },
+        {
+            id: t.journey.steps.curriculum.step,
+            titleEn: "Customized Curriculum",
+            title: t.journey.steps.curriculum.title,
+            description: t.journey.steps.curriculum.desc,
+            icon: PenTool,
+        },
+        {
+            id: t.journey.steps.start.step,
+            titleEn: "Instant Start",
+            title: t.journey.steps.start.title,
+            description: t.journey.steps.start.desc,
+            icon: Zap,
+        },
+    ];
+
     return (
         <section className="py-20 bg-midnight relative overflow-hidden" id="journey">
             {/* Subtle Divider */}
@@ -48,7 +51,7 @@ export default function Journey() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold mb-4 text-white"
                     >
-                        رحلتك نحو الإتقان.. <span className="text-gold">خطوة بخطوة</span>
+                        {t.journey.title} <span className="text-gold">{t.journey.titleHighlight}</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -57,14 +60,14 @@ export default function Journey() {
                         transition={{ delay: 0.1 }}
                         className="text-gray-400 text-lg"
                     >
-                        منهجية علمية مجربة تضمن لك الوصول لهدفك بأسرع وقت.
+                        {t.journey.subtitle}
                     </motion.p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
                     {steps.map((step, index) => (
                         <motion.div
-                            key={step.id}
+                            key={index}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -78,8 +81,9 @@ export default function Journey() {
                                 </div>
                             </div>
 
-                            <h4 className="text-gray-400 text-sm font-medium mb-1 font-serif tracking-wide">{step.titleEn}</h4>
-                            <h3 className="text-xl font-bold text-white mb-4">{step.titleAr}</h3>
+                            {/* Optional: Keep English subtitle or remove. The design had `titleEn` and `titleAr`. I'll remove `titleEn` and just show `title` to be cleaner for all langs. */}
+                            {/* <h4 className="text-gray-400 text-sm font-medium mb-1 font-serif tracking-wide">{step.titleEn}</h4> */}
+                            <h3 className="text-xl font-bold text-white mb-4">{step.title}</h3>
 
                             <p className="text-gray-400 text-sm leading-relaxed">
                                 {step.description}
