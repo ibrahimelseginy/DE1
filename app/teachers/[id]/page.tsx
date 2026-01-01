@@ -7,8 +7,10 @@ import { teachers } from '../../data/teachers';
 import { useParams } from 'next/navigation';
 import { Star, Clock, Award, CheckCircle, User, Phone, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function TeacherDetailsPage() {
+    const { t, dir } = useLanguage();
     const params = useParams();
     const teacherId = Number(params.id);
     const teacher = teachers.find(t => t.id === teacherId);
@@ -27,10 +29,10 @@ export default function TeacherDetailsPage() {
 
     if (!teacher) {
         return (
-            <main className="min-h-screen bg-midnight text-foreground font-sans">
+            <main className="min-h-screen bg-midnight text-foreground">
                 <Navbar />
                 <div className="min-h-[60vh] flex items-center justify-center pt-20">
-                    <p className="text-white text-xl">المعلم غير موجود</p>
+                    <p className="text-white text-xl">{t.teachers.notFound}</p>
                 </div>
                 <Footer />
             </main>
@@ -45,13 +47,13 @@ export default function TeacherDetailsPage() {
     };
 
     return (
-        <main className="min-h-screen bg-midnight text-foreground font-sans selection:bg-gold selection:text-midnight overflow-x-hidden">
+        <main className="min-h-screen bg-midnight text-foreground selection:bg-gold selection:text-midnight overflow-x-hidden">
             <Navbar />
             <div className="pt-32 pb-20 container mx-auto px-4">
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     {/* Teacher Details Side */}
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
+                        initial={{ opacity: 0, x: dir === 'rtl' ? 50 : -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="space-y-8 order-2 lg:order-1"
                     >
@@ -69,15 +71,15 @@ export default function TeacherDetailsPage() {
                                     <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Star className="text-gold w-4 h-4" fill="currentColor" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.stars} تقييم</span>
+                                            <span className="text-sm text-gray-300">{teacher.stats.stars} {t.teachers.reviews}</span>
                                         </div>
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Clock className="text-gold w-4 h-4" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.sessions} حصة</span>
+                                            <span className="text-sm text-gray-300">{teacher.stats.sessions} {t.teachers.sessions}</span>
                                         </div>
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Award className="text-gold w-4 h-4" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.exp} خبرة</span>
+                                            <span className="text-sm text-gray-300">{teacher.stats.exp} {t.teachers.experience}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -88,20 +90,42 @@ export default function TeacherDetailsPage() {
                                 <p className="text-gray-400 leading-relaxed">
                                     {teacher.bio}
                                 </p>
+
+                                {teacher.videoUrl && (
+                                    <div className="mt-8">
+                                        <h3 className="text-xl font-bold text-white mb-4">فيديو تعريفي</h3>
+                                        <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                                            {/* We can use an iframe if it's external, or video tag. Assuming mostly YouTube/Vimeo embeds or simple video links for now we used generic iframe thinking */}
+                                            {teacher.videoUrl.includes('youtube') || teacher.videoUrl.includes('youtu.be') ? (
+                                                <iframe
+                                                    src={teacher.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                                                    className="w-full h-full"
+                                                    title="Teacher Video"
+                                                    allowFullScreen
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                ></iframe>
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-black/50 text-gray-400">
+                                                    (Video Player Placeholder for: {teacher.videoUrl})
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </motion.div>
 
                     {/* Booking Form Side */}
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
+                        initial={{ opacity: 0, x: dir === 'rtl' ? -50 : 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
                         className="bg-[#111827] rounded-3xl p-8 border border-white/5 border-t-4 border-t-gold shadow-2xl order-1 lg:order-2"
                     >
                         <div className="mb-8 text-center">
-                            <h2 className="text-2xl font-bold text-white mb-2">احجز حصة مجانية</h2>
-                            <p className="text-gray-400 text-sm">سجل بياناتك وسنتواصل معك لتحديد الموعد</p>
+                            <h2 className="text-2xl font-bold text-white mb-2">{t.booking.title}</h2>
+                            <p className="text-gray-400 text-sm">{t.booking.subtitle}</p>
                         </div>
 
                         {submitted ? (
@@ -111,47 +135,47 @@ export default function TeacherDetailsPage() {
                                 className="bg-green-500/10 border border-green-500/20 rounded-2xl p-8 text-center"
                             >
                                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-white mb-2">تم التسجيل بنجاح!</h3>
-                                <p className="text-gray-400">سيتواصل معك فريقنا قريباً لتأكيد الحجز.</p>
+                                <h3 className="text-xl font-bold text-white mb-2">{t.booking.successTitle}</h3>
+                                <p className="text-gray-400">{t.booking.successMessage}</p>
                                 <button
                                     onClick={() => setSubmitted(false)}
                                     className="mt-6 text-gold text-sm hover:underline"
                                 >
-                                    حجز موعد آخر
+                                    {t.booking.bookAnother}
                                 </button>
                             </motion.div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-6" dir="rtl">
+                            <form onSubmit={handleSubmit} className="space-y-6" dir={dir}>
                                 {/* Contact Info */}
                                 <div className="space-y-4">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">بيانات التواصل</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.contactInfo}</h3>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-2">الاسم</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">{t.booking.name}</label>
                                         <div className="relative">
-                                            <User className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                                            <User className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
                                                 type="text"
                                                 required
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600"
-                                                placeholder="أدخل اسمك بالكامل"
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
+                                                placeholder={t.booking.namePlaceholder}
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-2">رقم الواتساب</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">{t.booking.phone}</label>
                                         <div className="relative">
-                                            <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                                            <Phone className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
                                                 type="tel"
                                                 required
                                                 value={formData.phone}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans"
-                                                placeholder="01xxxxxxxxx"
-                                                style={{ direction: 'ltr', textAlign: 'right' }}
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
+                                                placeholder={t.booking.phonePlaceholder}
+                                                style={{ direction: 'ltr', textAlign: dir === 'rtl' ? 'right' : 'left' }}
                                             />
                                         </div>
                                     </div>
@@ -161,22 +185,27 @@ export default function TeacherDetailsPage() {
 
                                 {/* Goals */}
                                 <div className="space-y-3">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">ما هو هدفك؟</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.goalsTitle}</h3>
                                     <div className="grid grid-cols-1 gap-2">
-                                        {['تعلم اللغة للعمل', 'تحسين المحادثة', 'التحضير لاختبار', 'تأسيس طفل'].map((goal) => (
-                                            <label key={goal} className={`flex items-center p-3 rounded-xl border cursor-pointer transition-all ${formData.goal === goal ? 'bg-gold/10 border-gold text-white' : 'bg-black/20 border-white/10 text-gray-400 hover:bg-white/5'}`}>
+                                        {[
+                                            { key: 'work', label: t.booking.goals.work },
+                                            { key: 'speaking', label: t.booking.goals.speaking },
+                                            { key: 'exam', label: t.booking.goals.exam },
+                                            { key: 'kids', label: t.booking.goals.kids }
+                                        ].map((item) => (
+                                            <label key={item.key} className={`flex items-center p-3 rounded-xl border cursor-pointer transition-all ${formData.goal === item.key ? 'bg-gold/10 border-gold text-white' : 'bg-black/20 border-white/10 text-gray-400 hover:bg-white/5'}`}>
                                                 <input
                                                     type="radio"
                                                     name="goal"
-                                                    value={goal}
-                                                    checked={formData.goal === goal}
+                                                    value={item.key}
+                                                    checked={formData.goal === item.key}
                                                     onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
                                                     className="hidden"
                                                 />
-                                                <span className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${formData.goal === goal ? 'border-gold' : 'border-gray-500'}`}>
-                                                    {formData.goal === goal && <div className="w-2 h-2 rounded-full bg-gold"></div>}
+                                                <span className={`w-4 h-4 rounded-full border ${dir === 'rtl' ? 'ml-2' : 'mr-2'} flex items-center justify-center ${formData.goal === item.key ? 'border-gold' : 'border-gray-500'}`}>
+                                                    {formData.goal === item.key && <div className="w-2 h-2 rounded-full bg-gold"></div>}
                                                 </span>
-                                                <span className="mr-2">{goal}</span>
+                                                <span>{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -184,19 +213,24 @@ export default function TeacherDetailsPage() {
 
                                 {/* Level */}
                                 <div className="space-y-3">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">ما هو مستواك الحالي؟</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.levelTitle}</h3>
                                     <div className="grid grid-cols-2 gap-2">
-                                        {['مبتدئ', 'أساسيات', 'متوسط', 'متقدم'].map((level) => (
-                                            <label key={level} className={`flex items-center justify-center text-center p-3 rounded-xl border cursor-pointer transition-all ${formData.level === level ? 'bg-gold/10 border-gold text-white' : 'bg-black/20 border-white/10 text-gray-400 hover:bg-white/5'}`}>
+                                        {[
+                                            { key: 'beginner', label: t.booking.levels.beginner },
+                                            { key: 'basics', label: t.booking.levels.basics },
+                                            { key: 'intermediate', label: t.booking.levels.intermediate },
+                                            { key: 'advanced', label: t.booking.levels.advanced }
+                                        ].map((item) => (
+                                            <label key={item.key} className={`flex items-center justify-center text-center p-3 rounded-xl border cursor-pointer transition-all ${formData.level === item.key ? 'bg-gold/10 border-gold text-white' : 'bg-black/20 border-white/10 text-gray-400 hover:bg-white/5'}`}>
                                                 <input
                                                     type="radio"
                                                     name="level"
-                                                    value={level}
-                                                    checked={formData.level === level}
+                                                    value={item.key}
+                                                    checked={formData.level === item.key}
                                                     onChange={(e) => setFormData({ ...formData, level: e.target.value })}
                                                     className="hidden"
                                                 />
-                                                <span>{level}</span>
+                                                <span>{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -204,60 +238,60 @@ export default function TeacherDetailsPage() {
 
                                 {/* Timeline */}
                                 <div className="space-y-3">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">متى تريد تحقيق هدفك؟</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.timelineTitle}</h3>
                                     <select
                                         value={formData.timeline}
                                         onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
                                         className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
                                     >
-                                        <option value="" disabled className="bg-gray-900">اختر المدة...</option>
-                                        <option value="1-4 weeks" className="bg-gray-900">1-4 أسابيع</option>
-                                        <option value="1-3 months" className="bg-gray-900">1-3 أشهر</option>
-                                        <option value="3-6 months" className="bg-gray-900">3-6 أشهر</option>
-                                        <option value="open" className="bg-gray-900">وقت مفتوح</option>
-                                        <option value="one-lesson" className="bg-gray-900">درس واحد فقط</option>
+                                        <option value="" disabled className="bg-gray-900">{t.booking.timelinePlaceholder}</option>
+                                        <option value="weeks" className="bg-gray-900">{t.booking.timelines.weeks}</option>
+                                        <option value="months1" className="bg-gray-900">{t.booking.timelines.months1}</option>
+                                        <option value="months3" className="bg-gray-900">{t.booking.timelines.months3}</option>
+                                        <option value="open" className="bg-gray-900">{t.booking.timelines.open}</option>
+                                        <option value="oneLesson" className="bg-gray-900">{t.booking.timelines.oneLesson}</option>
                                     </select>
                                 </div>
 
                                 {/* Availability */}
                                 <div className="space-y-3">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">الأوقات المناسبة</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.availabilityTitle}</h3>
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-2">الأيام</p>
+                                        <p className="text-xs text-gray-400 mb-2">{t.booking.daysLabel}</p>
                                         <div className="flex flex-wrap gap-2">
-                                            {['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'].map((day) => (
+                                            {['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'].map((dayKey) => (
                                                 <button
-                                                    key={day}
+                                                    key={dayKey}
                                                     type="button"
                                                     onClick={() => {
-                                                        const days = formData.days.includes(day)
-                                                            ? formData.days.filter(d => d !== day)
-                                                            : [...formData.days, day];
+                                                        const days = formData.days.includes(dayKey)
+                                                            ? formData.days.filter(d => d !== dayKey)
+                                                            : [...formData.days, dayKey];
                                                         setFormData({ ...formData, days });
                                                     }}
-                                                    className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${formData.days.includes(day) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${formData.days.includes(dayKey) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
                                                 >
-                                                    {day}
+                                                    {t.booking.days[dayKey as keyof typeof t.booking.days]}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-2">الفترات</p>
+                                        <p className="text-xs text-gray-400 mb-2">{t.booking.timesLabel}</p>
                                         <div className="flex gap-2">
-                                            {['صباحاً', 'ظهراً', 'مساءً'].map((time) => (
+                                            {['morning', 'afternoon', 'evening'].map((timeKey) => (
                                                 <button
-                                                    key={time}
+                                                    key={timeKey}
                                                     type="button"
                                                     onClick={() => {
-                                                        const times = formData.times.includes(time)
-                                                            ? formData.times.filter(t => t !== time)
-                                                            : [...formData.times, time];
+                                                        const times = formData.times.includes(timeKey)
+                                                            ? formData.times.filter(t => t !== timeKey)
+                                                            : [...formData.times, timeKey];
                                                         setFormData({ ...formData, times });
                                                     }}
-                                                    className={`flex-1 py-2 rounded-lg text-sm border transition-all ${formData.times.includes(time) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
+                                                    className={`flex-1 py-2 rounded-lg text-sm border transition-all ${formData.times.includes(timeKey) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
                                                 >
-                                                    {time}
+                                                    {t.booking.times[timeKey as keyof typeof t.booking.times]}
                                                 </button>
                                             ))}
                                         </div>
@@ -266,19 +300,19 @@ export default function TeacherDetailsPage() {
 
                                 {/* Source */}
                                 <div className="space-y-3">
-                                    <h3 className="text-white font-bold text-lg border-r-4 border-gold pr-3">كيف سمعت عنا؟</h3>
+                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.sourceTitle}</h3>
                                     <select
                                         value={formData.source}
                                         onChange={(e) => setFormData({ ...formData, source: e.target.value })}
                                         className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
                                     >
-                                        <option value="" disabled className="bg-gray-900">اختر المصدر...</option>
-                                        <option value="friend" className="bg-gray-900">ترشيح من صديق</option>
-                                        <option value="facebook" className="bg-gray-900">فيسبوك</option>
-                                        <option value="instagram" className="bg-gray-900">انستجرام</option>
-                                        <option value="tiktok" className="bg-gray-900">تيك توك</option>
-                                        <option value="google" className="bg-gray-900">بحث جوجل</option>
-                                        <option value="other" className="bg-gray-900">أخرى</option>
+                                        <option value="" disabled className="bg-gray-900">{t.booking.sourcePlaceholder}</option>
+                                        <option value="friend" className="bg-gray-900">{t.booking.sources.friend}</option>
+                                        <option value="facebook" className="bg-gray-900">{t.booking.sources.facebook}</option>
+                                        <option value="instagram" className="bg-gray-900">{t.booking.sources.instagram}</option>
+                                        <option value="tiktok" className="bg-gray-900">{t.booking.sources.tiktok}</option>
+                                        <option value="google" className="bg-gray-900">{t.booking.sources.google}</option>
+                                        <option value="other" className="bg-gray-900">{t.booking.sources.other}</option>
                                     </select>
                                 </div>
 
@@ -286,7 +320,7 @@ export default function TeacherDetailsPage() {
                                     type="submit"
                                     className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 flex items-center justify-center gap-2 mt-8 group"
                                 >
-                                    <span>تأكيد الحجز</span>
+                                    <span>{t.booking.confirm}</span>
                                     <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
                                 </button>
                             </form>

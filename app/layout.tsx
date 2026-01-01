@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "دورات لغة مفصلة على مقاسك تماماً. في DE1، وقتك ملكك وحدك.",
 };
 
+import { LanguageProvider } from "./context/LanguageContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +32,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${alexandria.variable} ${lalezar.variable} antialiased bg-midnight text-foreground`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
