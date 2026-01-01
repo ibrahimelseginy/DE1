@@ -3,22 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Clock, Award, Play } from 'lucide-react';
 
-const teachers = [
-    {
-        id: 1,
-        name: "أ/ أسامة عيسى",
-        role: "خبير اللغة الألمانية",
-        stats: { stars: "4.9", sessions: "+1000", exp: "+4 سنوات" },
-        bio: "متخصص في تحويل المبتدئين إلى متحدثين بطلاقة من خلال منهج تفاعلي يركز على احتياجاتك المهنية.",
-    },
-    {
-        id: 2,
-        name: "أ/ سارة محمد",
-        role: "مدربة محادثة انجليزية",
-        stats: { stars: "5.0", sessions: "+2500", exp: "+6 سنوات" },
-        bio: "ساعدت مئات الطلاب على اجتياز اختبارات الآيلتس بفضل أسلوبها المبسط والعملي.",
-    },
-];
+import { teachers } from '../data/teachers';
+import Link from 'next/link';
 
 export default function Teachers() {
     return (
@@ -86,9 +72,9 @@ export default function Teachers() {
                                     {teacher.bio}
                                 </p>
 
-                                <button className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 mt-auto">
+                                <Link href={`/teachers/${teacher.id}`} className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 mt-auto text-center block">
                                     احجز حصة مع المعلم
-                                </button>
+                                </Link>
                             </div>
                         </motion.div>
                     ))}

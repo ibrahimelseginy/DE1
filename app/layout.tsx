@@ -27,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body
+        suppressHydrationWarning
         className={`${alexandria.variable} ${lalezar.variable} antialiased bg-midnight text-foreground`}
       >
         {children}
