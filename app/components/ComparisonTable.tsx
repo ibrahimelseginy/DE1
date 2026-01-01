@@ -2,66 +2,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, XCircle, Clock, User, Zap, BookOpen, Calendar, Settings, Target, ShieldCheck, Mic } from 'lucide-react';
-
-const comparisonData = [
-    {
-        aspect: "موعد البداية",
-        icon: Clock,
-        traditional: "تنتظر أسبوعين أو ثلاثة حتى يكتمل عدد المجموعة.",
-        de1: "الانطلاق الفوري: تبدأ رحلتك التعليمية فوراً بمجرد اشتراكك!",
-        highlight: true
-    },
-    {
-        aspect: "اختيار المعلم",
-        icon: User,
-        traditional: "لا تختار معلمك ولا يمكنك تغييره.",
-        de1: "الحرية: أنت من يختار المعلم، ويمكنك تغييره فوراً إذا لم يناسبك."
-    },
-    {
-        aspect: "تجربة المعلم",
-        icon: Zap,
-        traditional: "تدفع ثمن الكورس كاملاً دون تجربة سابقة.",
-        de1: "الأمان: نوفر لك حصص تجريبية (Trials) لتتأكد من الجودة قبل الدفع الكامل."
-    },
-    {
-        aspect: "المواعيد",
-        icon: Calendar,
-        traditional: "مرتبطة بـ 10 طلاب آخرين؛ تغيير الموعد \"مستحيل\".",
-        de1: "المرونة: أنت سيد قرارك؛ تحدد وتغير مواعيدك بما يناسب جدولك."
-    },
-    {
-        aspect: "سرعة الكورس",
-        icon: Settings,
-        traditional: "لا تتحكم في السرعة؛ مجبر على وتيرة المجموعة.",
-        de1: "التحكم: أنت من يحدد عدد الدروس وسرعة التقدم (مكثف أو هادئ)."
-    },
-    {
-        aspect: "المنهج",
-        icon: BookOpen,
-        traditional: "كتاب واحد ثابت يُدرس للجميع بغض النظر عن الهدف.",
-        de1: "التفصيل: تختار هدفك (سفر، بيزنس، دراسة) ونحن نصمم المنهج على مقاسك."
-    },
-    {
-        aspect: "التركيز المباشر",
-        icon: Target,
-        traditional: "تدرس كورس كامل لعلاج \"نقطة ضعف\" واحدة.",
-        de1: "علاج نقطي: نصمم لك وحدات تعليمية \"مركزة\" تعالج مشكلتك تحديداً دون حشو."
-    },
-    {
-        aspect: "المخاطرة المالية",
-        icon: ShieldCheck,
-        traditional: "قد تخسر فلوسك إذا لم يعجبك الكورس في المنتصف.",
-        de1: "ضمان الرضا: يمكنك استرداد قيمة الحصص المتبقية في أي وقت دون تعقيدات."
-    },
-    {
-        aspect: "معدل التحدث",
-        icon: Mic,
-        traditional: "دقائق معدودة للمشاركة وسط المجموعة الكبيرة.",
-        de1: "المساحة لك: تتحدث وتمارس اللغة 100% من وقت الحصة مع معلمك الخاص."
-    }
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ComparisonTable() {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
+
+    const keys = [
+        { id: 'startDate', icon: Clock, highlight: true },
+        { id: 'teacherChoice', icon: User, highlight: false },
+        { id: 'teacherExp', icon: Zap, highlight: false },
+        { id: 'schedule', icon: Calendar, highlight: false },
+        { id: 'speed', icon: Settings, highlight: false },
+        { id: 'curriculum', icon: BookOpen, highlight: false },
+        { id: 'focus', icon: Target, highlight: false },
+        { id: 'financialRisk', icon: ShieldCheck, highlight: false },
+        { id: 'speakingRate', icon: Mic, highlight: false },
+    ] as const;
+
+    const comparisonData = keys.map(k => ({
+        ...t.comparison.items[k.id],
+        icon: k.icon,
+        highlight: k.highlight
+    }));
+
     return (
         <section className="py-24 bg-midnight relative overflow-hidden">
             {/* Background Effects */}
@@ -70,22 +34,22 @@ export default function ComparisonTable() {
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <span className="text-gold font-medium text-sm border border-gold/20 px-4 py-1.5 rounded-full mb-4 inline-block">
-                        مقارنة شاملة
+                        {t.comparison.badge}
                     </span>
                     <h2 className="text-3xl md:text-5xl font-lalezar text-white mb-6">
-                        لماذا تفشل الطرق التقليدية <br /> <span className="text-gold">وينجح أسلوبنا؟</span>
+                        {t.comparison.titlePart1} <br /> <span className="text-gold">{t.comparison.titlePart2}</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-lg hover:text-gray-300 transition-colors">
-                        لا داعي للمخاطرة بوقتك ومالك في تجارب قديمة. إليك الفرق بالأرقام والحقائق.
+                        {t.comparison.description}
                     </p>
                 </div>
 
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-5xl mx-auto" dir={getDir(language)}>
                     {/* Header - Hidden on mobile, shown on desktop */}
                     <div className="hidden md:grid grid-cols-12 gap-6 bg-white/5 p-6 rounded-t-3xl border border-white/5 backdrop-blur-sm">
-                        <div className="col-span-3 text-gold font-bold text-lg">وجه المقارنة</div>
-                        <div className="col-span-4 text-gray-400 font-bold text-lg">الأكاديميات التقليدية</div>
-                        <div className="col-span-5 text-gold font-bold text-2xl">DE1 Academy</div>
+                        <div className="col-span-3 text-gold font-bold text-lg">{t.comparison.headers.aspect}</div>
+                        <div className="col-span-4 text-gray-400 font-bold text-lg">{t.comparison.headers.traditional}</div>
+                        <div className="col-span-5 text-gold font-bold text-2xl">{t.comparison.headers.de1}</div>
                     </div>
 
                     {/* Rows */}
@@ -115,7 +79,7 @@ export default function ComparisonTable() {
                                 {/* Traditional */}
                                 <div className="col-span-4 flex items-start gap-3 text-gray-400 leading-relaxed group">
                                     <XCircle className="shrink-0 text-red-500/50 mt-1 size-5 group-hover:text-red-500 transition-colors" />
-                                    <span className="text-sm md:text-base">{item.traditional}</span>
+                                    <span className="text-sm md:text-base">{item.trad}</span>
                                 </div>
 
                                 {/* DE1 */}
@@ -131,10 +95,14 @@ export default function ComparisonTable() {
                 {/* Mobile Note */}
                 <div className="mt-8 text-center md:hidden">
                     <p className="text-sm text-gray-500">
-                        اسحب لليمين واليسار لرؤية المزيد من التفاصيل إذا لزم الأمر
+                        {t.comparison.mobileNote}
                     </p>
                 </div>
             </div>
         </section>
     );
+}
+
+function getDir(lang: string) {
+    return lang === 'ar' ? 'rtl' : 'ltr';
 }

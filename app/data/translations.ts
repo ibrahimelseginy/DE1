@@ -51,10 +51,46 @@ export const translations = {
         tracks: {
             title: "المسارات التعليمية",
             items: {
-                speaking: { title: "المحادثة بطلاقة", desc: "اكسر حاجز الخوف وتحدث كمتحدث اصلي. نركز على تصحيح النطق، واكتساب التعبيرات اليومية من خلال ممارسة محادثات حقيقية طوال الحصة." },
-                exams: { title: "التحضير للاختبارات الدولية", desc: "استعد لاجتياز اختبارات (IELTS, TOEFL, Goethe) بأقصر طريق. نوفر لك استراتيجيات الحل، محاكاة حقيقية لظروف الامتحان." },
-                business: { title: "التجهيز لسوق العمل", desc: "تعلم كيف تدير الاجتماعات، تكتب الإيميلات باحترافية، وتجتاز مقابلات العمل الدولية بكل ثقة في مجالك المهني." },
-                custom: { title: "صمم مسارك الخاص", desc: "لم تجد ما تبحث عنه؟ إذا كان هدفك فريداً (مثل إلقاء المحاضرات أو السفر العاجل)، فنحن نبني لك منهجاً يخصك وحدك." }
+                speaking: {
+                    title: 'المحادثة بطلاقة',
+                    desc: 'اكسر حاجز الخوف وتحدث كمتحدث أصلي. نركز على تصحيح النطق واكتساب التعبيرات اليومية.',
+                    features: [
+                        'سيناريوهات واقعية (مطاعم، سفر، عمل)',
+                        'ممارسة التحدث 100% من وقت الحصة',
+                        'تصحيح فوري للأخطاء',
+                        'تركز على النطق الصحيح (Accent Reduction)'
+                    ]
+                },
+                exams: {
+                    title: 'التحضير للاختبارات الدولية',
+                    desc: 'بأقصر طريق.. نوفر لك استراتيجيات (IELTS, TOEFL, Goethe) استعد لاجتياز اختبارات، الحل، محاكاة حقيقية لظروف الامتحان',
+                    features: [
+                        'استراتيجيات حل ذكية لكل قسم',
+                        'تحليل دقيق لنقاط الضعف',
+                        'اختبارات تجريبية غير محدودة',
+                        'ضمان تحسن الدرجة'
+                    ]
+                },
+                business: {
+                    title: 'التجهيز لسوق العمل',
+                    desc: 'تعلم كيف تدير الاجتماعات، تكتب الإيميلات باحترافية، وتجتاز مقابلات العمل الدولية بكل ثقة في مجالك المهني',
+                    features: [
+                        'كتابة الإيميلات والتقارير',
+                        'مصطلحات تخصصية في مجالك',
+                        'مهارات التفاوض والاجتماعات',
+                        'محاكاة مقابلات العمل'
+                    ]
+                },
+                custom: {
+                    title: 'صمم مسارك الخاص',
+                    desc: 'لم تجد ما تبحث عنه؟ إذا كان هدفك فريداً (مثل إلقاء المحاضرات أو السفر العاجل)، فنحن نبني لك منهجاً يخصك وحدك',
+                    features: [
+                        'جدول زمن مرن جداً',
+                        'مرونة في تغيير المحتوى',
+                        'منهج مصمم خصيصاً لك',
+                        'تركيز على أهدافك الدقيقة'
+                    ]
+                }
             }
         },
         teachers: {
@@ -66,6 +102,37 @@ export const translations = {
             experience: 'خبرة',
             years: 'سنوات',
             notFound: 'المعلم غير موجود',
+        },
+        testimonials: {
+            title: "ماذا يقول طلابنا؟",
+            readMore: "شاهد المزيد من قصص النجاح",
+            items: [
+                {
+                    name: "أحمد محمد",
+                    role: "مهندس برمجيات",
+                    content: "تجربة تعليمية ممتازة. لم أكن أتخيل أن أتحدث الألمانية بهذه الطلاقة في وقت قصير. التركيز على المحادثة كان هو المفتاح."
+                },
+                {
+                    name: "سارة علي",
+                    role: "طبيبة",
+                    content: "كنت أحتاج لاجتياز اختبار B2 للسفر، وبفضل الله ثم DE1 Academy حققت الدرجة المطلوبة من أول محاولة. شكراً لكم!"
+                },
+                {
+                    name: "عمر خالد",
+                    role: "طالب جامعي",
+                    content: "أفضل ما في الأكاديمية هو المرونة في المواعيد واختيار المعلم. لا يوجد ضغط، وأتعلم بالسرعة التي تناسبني."
+                }
+            ]
+        },
+        footer: {
+            ctaTitle: "ابدأ رحلتك نحو الإتقان اليوم",
+            ctaSubtitle: "لا انتظار لاكتمال المجموعات.. ابدأ فوراً مع معلمك الخاص",
+            ctaButton: "احجز حصتك التجريبية الآن",
+            brandDescription: "لأن أهدافك ليست كغيرك. نحن نبني لك مساراً تعليمياً يركز (فقط) على ما تحتاجه للوصول لهدفك.",
+            quickLinks: "روابط سريعة",
+            contactInfo: "معلومات التواصل",
+            freeConsultation: "استشارة تعليمية مجانية",
+            rights: "All Rights Reserved DE1 Academy 2025 ©" // Keeping English structure mostly but text can be variable
         },
         booking: {
             title: 'احجز حصة مجانية',
@@ -129,6 +196,29 @@ export const translations = {
                 google: 'بحث جوجل',
                 other: 'أخرى',
             }
+        },
+        comparison: {
+            badge: "مقارنة شاملة",
+            titlePart1: "لماذا تفشل الطرق التقليدية",
+            titlePart2: "وينجح أسلوبنا؟",
+            description: "لا داعي للمخاطرة بوقتك ومالك في تجارب قديمة. إليك الفرق بالأرقام والحقائق.",
+            mobileNote: "اسحب لليمين واليسار لرؤية المزيد من التفاصيل إذا لزم الأمر",
+            headers: {
+                aspect: "وجه المقارنة",
+                traditional: "الأكاديميات التقليدية",
+                de1: "DE1 Academy"
+            },
+            items: {
+                startDate: { aspect: "موعد البداية", trad: "تنتظر أسبوعين أو ثلاثة حتى يكتمل عدد المجموعة.", de1: "الانطلاق الفوري: تبدأ رحلتك التعليمية فوراً بمجرد اشتراكك!" },
+                teacherChoice: { aspect: "اختيار المعلم", trad: "لا تختار معلمك ولا يمكنك تغييره.", de1: "الحرية: أنت من يختار المعلم، ويمكنك تغييره فوراً إذا لم يناسبك." },
+                teacherExp: { aspect: "تجربة المعلم", trad: "تدفع ثمن الكورس كاملاً دون تجربة سابقة.", de1: "الأمان: نوفر لك حصص تجريبية (Trials) لتتأكد من الجودة قبل الدفع الكامل." },
+                schedule: { aspect: "المواعيد", trad: "مرتبطة بـ 10 طلاب آخرين؛ تغيير الموعد 'مستحيل'.", de1: "المرونة: أنت سيد قرارك؛ تحدد وتغير مواعيدك بما يناسب جدولك." },
+                speed: { aspect: "سرعة الكورس", trad: "لا تتحكم في السرعة؛ مجبر على وتيرة المجموعة.", de1: "التحكم: أنت من يحدد عدد الدروس وسرعة التقدم (مكثف أو هادئ)." },
+                curriculum: { aspect: "المنهج", trad: "كتاب واحد ثابت يُدرس للجميع بغض النظر عن الهدف.", de1: "التفصيل: تختار هدفك (سفر، بيزنس، دراسة) ونحن نصمم المنهج على مقاسك." },
+                focus: { aspect: "التركيز المباشر", trad: "تدرس كورس كامل لعلاج 'نقطة ضعف' واحدة.", de1: "علاج نقطي: نصمم لك وحدات تعليمية 'مركزة' تعالج مشكلتك تحديداً دون حشو." },
+                financialRisk: { aspect: "المخاطرة المالية", trad: "قد تخسر فلوسك إذا لم يعجبك الكورس في المنتصف.", de1: "ضمان الرضا: يمكنك استرداد قيمة الحصص المتبقية في أي وقت دون تعقيدات." },
+                speakingRate: { aspect: "معدل التحدث", trad: "دقائق معدودة للمشاركة وسط المجموعة الكبيرة.", de1: "المساحة لك: تتحدث وتمارس اللغة 100% من وقت الحصة مع معلمك الخاص." }
+            }
         }
     },
     en: {
@@ -181,10 +271,46 @@ export const translations = {
         tracks: {
             title: "Educational Tracks",
             items: {
-                speaking: { title: "Speaking Fluency", desc: "Break fear and speak like a native. Focus on pronunciation & idioms." },
-                exams: { title: "Intl. Exams Prep", desc: "Prepare for IELTS, TOEFL, Goethe with strategies & simulations." },
-                business: { title: "Job Market Prep", desc: "Manage meetings, emails, and interview skills professionally." },
-                custom: { title: "Design Your Path", desc: "Unique goal? We build a curriculum just for you (e.g. lectures, travel)." }
+                speaking: {
+                    title: 'Speaking Fluency',
+                    desc: 'Break the fear barrier and speak like a native. We focus on pronunciation correction and acquiring daily expressions.',
+                    features: [
+                        'Real-life scenarios (restaurants, travel, work)',
+                        'Speaking practice 100% of session time',
+                        'Instant error correction',
+                        'Focus on correct pronunciation (Accent Reduction)'
+                    ]
+                },
+                exams: {
+                    title: 'International Exam Prep',
+                    desc: 'Shortest path.. We provide strategies for (IELTS, TOEFL, Goethe). Prepare to pass tests with real simulation of exam conditions.',
+                    features: [
+                        'Smart solving strategies for each section',
+                        'Precise analysis of weak points',
+                        'Unlimited mock tests',
+                        'Score improvement guarantee'
+                    ]
+                },
+                business: {
+                    title: 'Job Market Preparation',
+                    desc: 'Learn how to manage meetings, write emails professionally, and pass international job interviews with confidence in your field.',
+                    features: [
+                        'Writing emails and reports',
+                        'Specialized terminology in your field',
+                        'Negotiation and meeting skills',
+                        'Job interview simulation'
+                    ]
+                },
+                custom: {
+                    title: 'Design Your Path',
+                    desc: 'Didn\'t find what you are looking for? If your goal is unique (like giving lectures or urgent travel), we build a curriculum just for you.',
+                    features: [
+                        'Very flexible schedule',
+                        'Flexibility to change content',
+                        'Curriculum designed specifically for you',
+                        'Focus on your precise goals'
+                    ]
+                }
             }
         },
         teachers: {
@@ -196,6 +322,37 @@ export const translations = {
             experience: 'Experience',
             years: 'Years',
             notFound: 'Teacher not found',
+        },
+        testimonials: {
+            title: "What our students say?",
+            readMore: "View more success stories",
+            items: [
+                {
+                    name: "Ahmed Mohamed",
+                    role: "Software Engineer",
+                    content: "Excellent educational experience. I never imagined speaking German so fluently in such a short time. Focusing on conversation was the key."
+                },
+                {
+                    name: "Sara Ali",
+                    role: "Doctor",
+                    content: "I needed to pass the B2 exam for travel, and thanks to God and DE1 Academy, I achieved the required score on the first attempt. Thank you!"
+                },
+                {
+                    name: "Omar Khaled",
+                    role: "University Student",
+                    content: "The best thing about the academy is the flexibility in appointments and teacher selection. No pressure, and I learn at my own pace."
+                }
+            ]
+        },
+        footer: {
+            ctaTitle: "Start your journey to mastery today",
+            ctaSubtitle: "No need to wait for groups.. Start immediately with your private teacher",
+            ctaButton: "Book your trial session now",
+            brandDescription: "Because your goals are unique. We build a learning path focused (completely) on what you need to reach your goal.",
+            quickLinks: "Quick Links",
+            contactInfo: "Contact Info",
+            freeConsultation: "Free Educational Consultation",
+            rights: "All Rights Reserved DE1 Academy 2025 ©"
         },
         booking: {
             title: 'Book a Free Session',
@@ -259,6 +416,29 @@ export const translations = {
                 google: 'Google Search',
                 other: 'Other',
             }
+        },
+        comparison: {
+            badge: "Comprehensive Comparison",
+            titlePart1: "Why Traditional Methods Fail",
+            titlePart2: "And Our Approach Succeeds?",
+            description: "No need to risk your time and money on old experiments. Here is the difference in numbers and facts.",
+            mobileNote: "Swipe left and right to see more details if needed.",
+            headers: {
+                aspect: "Comparison Aspect",
+                traditional: "Traditional Academies",
+                de1: "DE1 Academy"
+            },
+            items: {
+                startDate: { aspect: "Start Date", trad: "Wait 2-3 weeks for group to fill.", de1: "Instant Start: Start your journey immediately upon subscription!" },
+                teacherChoice: { aspect: "Teacher Choice", trad: "You don't choose your teacher nor can you change them.", de1: "Freedom: You choose the teacher, and can change them immediately if they don't suit you." },
+                teacherExp: { aspect: "Teacher Trial", trad: "Pay full course price without prior trial.", de1: "Safety: We provide trial sessions so you ensure quality before full payment." },
+                schedule: { aspect: "Schedule", trad: "Tied to 10 other students; changing time is 'impossible'.", de1: "Flexibility: You are the decision maker; set and change times to fit your schedule." },
+                speed: { aspect: "Course Speed", trad: "You don't control speed; forced to group pace.", de1: "Control: You determine number of lessons and pace (intensive or relaxed)." },
+                curriculum: { aspect: "Curriculum", trad: "One fixed book taught to everyone regardless of goal.", de1: "Tailored: You choose your goal (Travel, Business, Study) and we tailor the curriculum to your size." },
+                focus: { aspect: "Direct Focus", trad: "Study full course to fix one 'weakness'.", de1: "Spot Treatment: We design 'focused' units effectively addressing your specific problem without filler." },
+                financialRisk: { aspect: "Financial Risk", trad: "You might lose money if you don't like the course halfway.", de1: "Satisfaction Guarantee: You can refund remaining sessions at any time without complications." },
+                speakingRate: { aspect: "Speaking Rate", trad: "Few minutes to participate amidst large group.", de1: "Your Space: You speak and practice language 100% of the session time with your private teacher." }
+            }
         }
     },
     de: {
@@ -311,10 +491,46 @@ export const translations = {
         tracks: {
             title: "Bildungswege",
             items: {
-                speaking: { title: "Sprechflüssigkeit", desc: "Brechen Sie die Angst und sprechen Sie wie ein Muttersprachler." },
-                exams: { title: "Prüfungsvorbereitung", desc: "Vorbereitung auf IELTS, TOEFL, Goethe mit Strategien & Simulationen." },
-                business: { title: "Arbeitsmarkt", desc: "Meetings, E-Mails und Interviewfähigkeiten professionell meistern." },
-                custom: { title: "Eigener Pfad", desc: "Einzigartiges Ziel? Wir bauen einen Lehrplan nur für Sie." }
+                speaking: {
+                    title: "Sprechflüssigkeit",
+                    desc: "Brechen Sie die Angstbarriere und sprechen Sie wie ein Muttersprachler. Fokus auf Aussprache.",
+                    features: [
+                        'Reale Szenarien (Restaurants, Reisen, Arbeit)',
+                        '100% Sprechpraxis während der Sitzung',
+                        'Sofortige Fehlerkorrektur',
+                        'Fokus auf korrekte Aussprache (Akzentreduzierung)'
+                    ]
+                },
+                exams: {
+                    title: "Prüfungsvorbereitung",
+                    desc: "Vorbereitung auf IELTS, TOEFL, Goethe mit Strategien und Simulationen.",
+                    features: [
+                        'Intelligente Lösungsstrategien für jeden Teil',
+                        'Präzise Analyse von Schwachstellen',
+                        'Unbegrenzte Übungstests',
+                        'Garantierte Notenverbesserung'
+                    ]
+                },
+                business: {
+                    title: "Arbeitsmarktvorbereitung",
+                    desc: "Meetings leiten, E-Mails schreiben und Vorstellungsgespräche meistern.",
+                    features: [
+                        'E-Mails und Berichte schreiben',
+                        'Fachterminologie in Ihrem Bereich',
+                        'Verhandlungs- und Meeting-Kompetenzen',
+                        'Simulation von Vorstellungsgesprächen'
+                    ]
+                },
+                custom: {
+                    title: "Individueller Pfad",
+                    desc: "Einzigartiges Ziel? Wir erstellen einen Lehrplan nur für Sie.",
+                    features: [
+                        'Sehr flexibler Zeitplan',
+                        'Flexibilität bei Inhaltsänderungen',
+                        'Speziell für Sie entwickelter Lehrplan',
+                        'Fokussierung auf Ihre genauen Ziele'
+                    ]
+                }
             }
         },
         teachers: {
@@ -326,6 +542,37 @@ export const translations = {
             experience: 'Erfahrung',
             years: 'Jahre',
             notFound: 'Lehrer nicht gefunden',
+        },
+        testimonials: {
+            title: "Was unsere Schüler sagen?",
+            readMore: "Mehr Erfolgsgeschichten sehen",
+            items: [
+                {
+                    name: "Ahmed Mohamed",
+                    role: "Software Engineer",
+                    content: "Hervorragende Lernerfahrung. Ich hätte nie gedacht, dass ich in so kurzer Zeit so fließend Deutsch sprechen würde. Der Fokus auf Konversation war der Schlüssel."
+                },
+                {
+                    name: "Sara Ali",
+                    role: "Ärztin",
+                    content: "Ich musste die B2-Prüfung für die Reise bestehen, und dank Gott und der DE1 Academy habe ich die erforderliche Punktzahl beim ersten Versuch erreicht. Danke!"
+                },
+                {
+                    name: "Omar Khaled",
+                    role: "Student",
+                    content: "Das Beste an der Akademie ist die Flexibilität bei Terminen und der Lehrerauswahl. Kein Druck, ich lerne in meinem eigenen Tempo."
+                }
+            ]
+        },
+        footer: {
+            ctaTitle: "Beginnen Sie heute Ihre Reise zur Meisterschaft",
+            ctaSubtitle: "Kein Warten auf Gruppen.. Starten Sie sofort mit Ihrem Privatlehrer",
+            ctaButton: "Buchen Sie jetzt Ihre Probestunde",
+            brandDescription: "Weil Ihre Ziele einzigartig sind. Wir bauen einen Lernpfad, der sich (nur) auf das konzentriert, was Sie brauchen.",
+            quickLinks: "Schnelllinks",
+            contactInfo: "Kontaktinformationen",
+            freeConsultation: "Kostenlose Bildungsberatung",
+            rights: "All Rights Reserved DE1 Academy 2025 ©"
         },
         booking: {
             title: 'Kostenlose Sitzung buchen',
@@ -388,6 +635,29 @@ export const translations = {
                 tiktok: 'TikTok',
                 google: 'Google Suche',
                 other: 'Andere',
+            }
+        },
+        comparison: {
+            badge: "Umfassender Vergleich",
+            titlePart1: "Warum traditionelle Methoden scheitern",
+            titlePart2: "Und unser Ansatz erfolgreich ist?",
+            description: "Riskieren Sie nicht Ihre Zeit und Geld. Hier ist der Unterschied in Zahlen und Fakten.",
+            mobileNote: "Wischen Sie nach links und rechts, um mehr Details zu sehen",
+            headers: {
+                aspect: "Vergleichsaspekt",
+                traditional: "Traditionelle Akademien",
+                de1: "DE1 Academy"
+            },
+            items: {
+                startDate: { aspect: "Starttermin", trad: "2-3 Wochen warten, bis Gruppe voll ist.", de1: "Sofortstart: Ihre Reise beginnt sofort nach Anmeldung!" },
+                teacherChoice: { aspect: "Lehrerauswahl", trad: "Sie wählen weder Lehrer noch können Sie ihn ändern.", de1: "Freiheit: Sie wählen den Lehrer und können ihn sofort wechseln." },
+                teacherExp: { aspect: "Probestunde", trad: "Vollen Preis zahlen ohne vorherigen Test.", de1: "Sicherheit: Wir bieten Probestunden, um Qualität zu sichern." },
+                schedule: { aspect: "Termine", trad: "Abhängig von 10 anderen; Änderung 'unmöglich'.", de1: "Flexibilität: Sie bestimmen und ändern Termine nach Ihrem Plan." },
+                speed: { aspect: "Tempo", trad: "Keine Kontrolle; gezwungen zum Gruppentempo.", de1: "Kontrolle: Sie bestimmen Lektionenanzahl und Tempo." },
+                curriculum: { aspect: "Lehrplan", trad: "Ein festes Buch für alle, egal welches Ziel.", de1: "Maßgeschneidert: Ziel wählen (Reise, Business) und wir passen an." },
+                focus: { aspect: "Fokus", trad: "Ganzen Kurs lernen für eine 'Schwäche'.", de1: "Punktuelle Behandlung: Wir lösen Ihr spezifisches Problem direkt." },
+                financialRisk: { aspect: "Finanzielles Risiko", trad: "Geldverlust möglich bei Abbruch.", de1: "Zufriedenheitsgarantie: Restbetrag jederzeit erstattbar." },
+                speakingRate: { aspect: "Sprechzeit", trad: "Wenige Minuten in großer Gruppe.", de1: "Ihr Raum: 100% der Zeit sprechen Sie mit Ihrem Lehrer." }
             }
         }
     }
