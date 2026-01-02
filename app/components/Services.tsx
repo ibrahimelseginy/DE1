@@ -66,7 +66,7 @@ export default function Services() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: idx * 0.1 }}
-                            className={`rounded-2xl p-6 transition-all duration-300 group border relative overflow-hidden h-full flex flex-col justify-start
+                            className={`rounded-2xl p-6 transition-all duration-300 group border relative h-full flex flex-col justify-start
                 ${track.special
                                     ? 'bg-gradient-to-br from-gold/10 to-midnight border-gold/30 hover:shadow-[0_0_30px_rgba(212,175,55,0.1)]'
                                     : 'bg-white/5 border-white/5 hover:border-gold/30 hover:bg-white/10'
@@ -81,7 +81,7 @@ export default function Services() {
                                 {track.desc}
                             </p>
 
-                            <ul className="space-y-3 mt-auto">
+                            <ul className="space-y-3 mb-8">
                                 {track.features?.map((feature, i) => (
                                     <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
                                         <CheckCircle2 size={16} className="text-gold shrink-0 mt-0.5" />
@@ -89,6 +89,13 @@ export default function Services() {
                                     </li>
                                 ))}
                             </ul>
+
+                            <Link
+                                href="/teachers"
+                                className="mt-auto w-full text-center py-3 px-4 rounded-xl font-bold transition-all duration-300 relative z-10 block bg-gold text-midnight hover:bg-gold-shiny shadow-lg shadow-gold/10 hover:shadow-gold/30 hover:scale-[1.02]"
+                            >
+                                {t.hero.ctaBookTrial}
+                            </Link>
                         </motion.div>
                     ))}
                 </div>

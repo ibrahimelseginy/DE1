@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

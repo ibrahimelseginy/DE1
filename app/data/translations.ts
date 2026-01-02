@@ -27,12 +27,12 @@ export const translations = {
         },
         whyUs: {
             badge: "لماذا نحن؟",
-            titlePart1: "لأننا لا نشبه الآخرين",
-            titlePart2: "في أي شيء..",
+            titlePart1: "لماذا لا يحقق 90% من الطلاب",
+            titlePart2: "أهدافهم في تعلم اللغة؟",
             description: 'في الأكاديميات التقليدية، أنت جزء من "مجموعة". في DE1 Academy، أنت "المركز". نظامنا التعليمي صُمم ليحل كل المشاكل التي واجهتك سابقاً، ويوفر عليك سنوات من المحاولات غير المجدية.',
             ctaCompare: "اكتشف الفارق بنفسك (المقارنة الكاملة)",
             cards: {
-                custom: { title: "منهج مفصل", desc: "محتوى مصمم خصيصاً لعلاج نقاط ضعفك." },
+                custom: { title: "منهج مفصل", desc: "محتوى مصمم خصيصاً ليناسب أهدافك." },
                 instant: { title: "انطلاق فوري", desc: "ابدأ دراستك فوراً بدون انتظار اكتمال العدد." },
                 focus: { title: "تركيز كامل", desc: "المعلم لك وحدك بنسبة 100% طوال الحصة." }
             }
@@ -43,7 +43,7 @@ export const translations = {
             subtitle: "منهجية علمية مجربة تضمن لك الوصول لهدفك بأسرع وقت.",
             steps: {
                 discovery: { step: "01", title: "تحديد الوجهة", desc: "لا نبدأ بالتدريس فوراً؛ بل نبدأ بحصة تجريبية أقرب لجلسة استشارية لنفهم هدفك (سفر، عمل، أو طلاقة عامة) ونحدد مستواك الحالي بدقة." },
-                matching: { step: "02", title: "اختيار رفيق الرحلة", desc: "نرشح لك المعلم الأنسب لشخصيتك وأهدافك من بين نخبة مدرسينا المعتمدين، مع فرصة اختيار المدرس بنفسك." },
+                matching: { step: "02", title: "اختيار معلمك الشخصي", desc: "اختر معلمك بنفسك؛ لأننا لا نكتفي بالترشيح، بل نمنحك حرية القرار الكاملة." },
                 curriculum: { step: "03", title: "تفصيل المنهج", desc: "هنا نطبق شعارنا؛ نصمم لك محتوى تعليمياً (مُفصّلاً) يركز فقط على احتياجاتك، بعيداً عن حشو المناهج التقليدية." },
                 start: { step: "04", title: "الانطلاق الفوري", desc: "لا انتظار لاكتمال مجموعات؛ تبدأ حصتك الأولى (1-on-1) فوراً وفي المواعيد التي تختارها بنفسك بكل مرونة." }
             }
@@ -53,11 +53,11 @@ export const translations = {
             items: {
                 speaking: {
                     title: 'المحادثة بطلاقة',
-                    desc: 'اكسر حاجز الخوف وتحدث كمتحدث أصلي. نركز على تصحيح النطق واكتساب التعبيرات اليومية.',
+                    desc: 'تحدث اللغة من أول يوم حتى بدون معرفة سابقة. نركز على تصحيح النطق واكتساب التعبيرات اليومية.',
                     features: [
                         'سيناريوهات واقعية (مطاعم، سفر، عمل)',
                         'ممارسة التحدث 100% من وقت الحصة',
-                        'تصحيح فوري للأخطاء',
+                        'تصحيح فوري للأخطاء', // Updated
                         'تركز على النطق الصحيح (Accent Reduction)'
                     ]
                 },
@@ -73,9 +73,8 @@ export const translations = {
                 },
                 business: {
                     title: 'التجهيز لسوق العمل',
-                    desc: 'تعلم كيف تدير الاجتماعات، تكتب الإيميلات باحترافية، وتجتاز مقابلات العمل الدولية بكل ثقة في مجالك المهني',
+                    desc: 'تعلم كيف تدير الاجتماعات، وتجتاز مقابلات العمل الدولية بكل ثقة في مجالك المهني',
                     features: [
-                        'كتابة الإيميلات والتقارير',
                         'مصطلحات تخصصية في مجالك',
                         'مهارات التفاوض والاجتماعات',
                         'محاكاة مقابلات العمل'
@@ -247,12 +246,12 @@ export const translations = {
         },
         whyUs: {
             badge: "Why Us?",
-            titlePart1: "Because we are unlike others",
-            titlePart2: "In anything..",
+            titlePart1: "Why 90% of students don't achieve",
+            titlePart2: "their language learning goals?",
             description: 'In traditional academies, you are part of a "group". In DE1 Academy, you are the "Center". Our system is designed to solve all prior problems.',
             ctaCompare: "Discover the difference (Full Comparison)",
             cards: {
-                custom: { title: "Tailored Curriculum", desc: "Content designed specifically for your weaknesses." },
+                custom: { title: "Tailored Curriculum", desc: "Content designed specifically to suit your goals." },
                 instant: { title: "Instant Start", desc: "Start immediately without waiting for groups." },
                 focus: { title: "Full Focus", desc: "The teacher is 100% yours during the session." }
             }
@@ -263,7 +262,7 @@ export const translations = {
             subtitle: "Proven scientific methodology ensures you reach your goal fast.",
             steps: {
                 discovery: { step: "01", title: "Discovery & Goals", desc: "We start with a trial session/consultation to understand your goal (travel, work, fluency) & level." },
-                matching: { step: "02", title: "Teacher Matching", desc: "We recommend the best teacher for you from our elite certified team." },
+                matching: { step: "02", title: "Choose Your Teacher", desc: "Choose your teacher yourself. We don't just recommend; we give you full freedom to decide." },
                 curriculum: { step: "03", title: "Customized Curriculum", desc: "We design tailored content focusing only on your needs." },
                 start: { step: "04", title: "Instant Start", desc: "No waiting. Your 1-on-1 sessions start immediately at your chosen times." }
             }
@@ -273,7 +272,7 @@ export const translations = {
             items: {
                 speaking: {
                     title: 'Speaking Fluency',
-                    desc: 'Break the fear barrier and speak like a native. We focus on pronunciation correction and acquiring daily expressions.',
+                    desc: 'Speak the language from day one even without prior knowledge. We focus on pronunciation correction and acquiring daily expressions.',
                     features: [
                         'Real-life scenarios (restaurants, travel, work)',
                         'Speaking practice 100% of session time',
@@ -293,9 +292,8 @@ export const translations = {
                 },
                 business: {
                     title: 'Job Market Preparation',
-                    desc: 'Learn how to manage meetings, write emails professionally, and pass international job interviews with confidence in your field.',
+                    desc: 'Learn how to manage meetings and pass international job interviews with confidence in your field.',
                     features: [
-                        'Writing emails and reports',
                         'Specialized terminology in your field',
                         'Negotiation and meeting skills',
                         'Job interview simulation'
@@ -467,12 +465,12 @@ export const translations = {
         },
         whyUs: {
             badge: "Warum wir?",
-            titlePart1: "Weil wir anders sind",
-            titlePart2: "In allem..",
+            titlePart1: "Warum 90% der Schüler ihre",
+            titlePart2: "Sprachlernziele nicht erreichen?",
             description: 'In traditionellen Akademien sind Sie Teil einer "Gruppe". In der DE1 Academy sind Sie das "Zentrum". Unser System löst alle Ihre bisherigen Probleme.',
             ctaCompare: "Entdecken Sie den Unterschied",
             cards: {
-                custom: { title: "Maßgeschneiderter Plan", desc: "Inhalt speziell für Ihre Schwächen entwickelt." },
+                custom: { title: "Maßgeschneiderter Plan", desc: "Inhalt speziell für Ihre Ziele entwickelt." },
                 instant: { title: "Sofortstart", desc: "Beginnen Sie sofort ohne Wartezeit auf Gruppen." },
                 focus: { title: "Voller Fokus", desc: "Der Lehrer gehört 100% Ihnen während der Stunde." }
             }
@@ -483,7 +481,7 @@ export const translations = {
             subtitle: "Bewährte Methode garantiert schnellen Erfolg.",
             steps: {
                 discovery: { step: "01", title: "Ziele", desc: "Wir beginnen mit einer Probestunde/Beratung, um Ihr Ziel zu verstehen und Ihr Niveau zu bestimmen." },
-                matching: { step: "02", title: "Lehrerauswahl", desc: "Wir empfehlen den besten Lehrer für Ihre Persönlichkeit." },
+                matching: { step: "02", title: "Wählen Sie Ihren Lehrer", desc: "Wählen Sie Ihren Lehrer selbst. Wir empfehlen nicht nur, sondern geben Ihnen die volle Entscheidungsfreiheit." },
                 curriculum: { step: "03", title: "Individueller Plan", desc: "Wir gestalten Inhalte, die sich nur auf Ihre Bedürfnisse konzentrieren." },
                 start: { step: "04", title: "Sofortstart", desc: "Kein Warten. Ihre 1-zu-1 Stunden beginnen sofort flexibel." }
             }
@@ -493,7 +491,7 @@ export const translations = {
             items: {
                 speaking: {
                     title: "Sprechflüssigkeit",
-                    desc: "Brechen Sie die Angstbarriere und sprechen Sie wie ein Muttersprachler. Fokus auf Aussprache.",
+                    desc: "Sprechen Sie die Sprache vom ersten Tag an, auch ohne Vorkenntnisse. Fokus auf Aussprache.",
                     features: [
                         'Reale Szenarien (Restaurants, Reisen, Arbeit)',
                         '100% Sprechpraxis während der Sitzung',
@@ -513,9 +511,8 @@ export const translations = {
                 },
                 business: {
                     title: "Arbeitsmarktvorbereitung",
-                    desc: "Meetings leiten, E-Mails schreiben und Vorstellungsgespräche meistern.",
+                    desc: "Meetings leiten und Vorstellungsgespräche meistern.",
                     features: [
-                        'E-Mails und Berichte schreiben',
                         'Fachterminologie in Ihrem Bereich',
                         'Verhandlungs- und Meeting-Kompetenzen',
                         'Simulation von Vorstellungsgesprächen'

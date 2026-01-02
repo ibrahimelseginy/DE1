@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Star, Quote, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -52,7 +53,7 @@ export default function Testimonials() {
                             </p>
 
                             <div className="flex items-center gap-4">
-                                <img src={review.image} alt={review.name} className="w-12 h-12 rounded-full border border-gold/20" />
+                                <Image src={review.image} alt={review.name} width={48} height={48} className="w-12 h-12 rounded-full border border-gold/20" />
                                 <div>
                                     <h4 className="text-white font-bold text-sm">{review.name}</h4>
                                     <p className="text-gold text-xs">{review.role}</p>
