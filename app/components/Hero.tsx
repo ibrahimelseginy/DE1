@@ -19,7 +19,7 @@ export default function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                    <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gold/5 text-gold text-sm font-medium mb-8 mt-12 border border-gold/10 backdrop-blur-sm">
+                    <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gold/5 text-gold text-sm font-medium mb-8 mt-20 border border-gold/10 backdrop-blur-sm">
                         <span>🚀</span>
                         <span>{t.hero.startJourney}</span>
                     </div>
