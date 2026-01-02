@@ -18,9 +18,10 @@ const saveTeachers = (teachers: any[]) => {
     fs.writeFileSync(dataFilePath, JSON.stringify(teachers, null, 2));
 };
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = Number(params.id);
+        const { id: idStr } = await params;
+        const id = Number(idStr);
         const teachers = getTeachers();
         const teacher = teachers.find((t: any) => t.id === id);
 
@@ -33,9 +34,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = Number(params.id);
+        const { id: idStr } = await params;
+        const id = Number(idStr);
         const body = await request.json();
         const teachers = getTeachers();
 
@@ -54,9 +56,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = Number(params.id); // Convert string param to number
+        const { id: idStr } = await params;
+        const id = Number(idStr);
         let teachers = getTeachers();
 
         const initialLength = teachers.length;

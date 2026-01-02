@@ -60,7 +60,7 @@ export default function ComparisonTable() {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1 }}
+                                transition={{ delay: idx * 0.02, duration: 0.3 }}
                                 className={`
                                     relative grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 p-6 rounded-2xl md:rounded-none border-b border-white/5
                                     ${idx === comparisonData.length - 1 ? 'md:rounded-b-3xl border-b-0' : ''}

@@ -3,12 +3,54 @@ import React from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingSocials from "../components/FloatingSocials";
-import { tracks } from '../data/tracks';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, Target, Users, Zap, Calendar } from 'lucide-react';
+import { CheckCircle2, Target, Users, Zap, Calendar } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function TracksPage() {
+    const { t, language } = useLanguage();
+
+    // Journey steps - using existing translations
+    const journeySteps = [
+        { icon: Target, title: t.journey.steps.discovery.title, desc: t.journey.steps.discovery.desc },
+        { icon: Zap, title: t.journey.steps.matching.title, desc: t.journey.steps.matching.desc },
+        { icon: Calendar, title: t.journey.steps.curriculum.title, desc: t.journey.steps.curriculum.desc },
+        { icon: Users, title: t.journey.steps.start.title, desc: t.journey.steps.start.desc },
+    ];
+
+    // Get tracks from translations
+    const tracksData = [
+        {
+            id: 'speaking',
+            title: t.tracks.items.speaking.title,
+            desc: t.tracks.items.speaking.desc,
+            features: t.tracks.items.speaking.features,
+            special: false
+        },
+        {
+            id: 'exams',
+            title: t.tracks.items.exams.title,
+            desc: t.tracks.items.exams.desc,
+            features: t.tracks.items.exams.features,
+            special: false
+        },
+        {
+            id: 'business',
+            title: t.tracks.items.business.title,
+            desc: t.tracks.items.business.desc,
+            features: t.tracks.items.business.features,
+            special: false
+        },
+        {
+            id: 'custom',
+            title: t.tracks.items.custom.title,
+            desc: t.tracks.items.custom.desc,
+            features: t.tracks.items.custom.features,
+            special: true
+        }
+    ];
+
     return (
         <main className="min-h-screen bg-midnight text-foreground font-sans selection:bg-gold selection:text-midnight overflow-x-hidden">
             <Navbar />
@@ -24,7 +66,7 @@ export default function TracksPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-4xl md:text-6xl font-bold text-white mb-6"
                     >
-                        مسارات تعليمية <span className="text-[#c89e4c]">احترافية</span>
+                        {t.tracks.title}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -32,7 +74,7 @@ export default function TracksPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
                     >
-                        لا نعتمد على منهج واحد للجميع. اختر المسار الذي يناسب هدفك، وسيقوم فريقنا بتخصيص خطة العمل لتصل إلى هدفك في أقصر وقت.
+                        {t.whyUs.description}
                     </motion.p>
                 </div>
             </section>
@@ -41,7 +83,9 @@ export default function TracksPage() {
             <section className="pb-20 pt-0 relative">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-white mb-4">كيف تبدأ رحلتك معنا؟</h2>
+                        <h2 className="text-3xl font-bold text-white mb-4">
+                            {t.journey.title} <span className="text-[#c89e4c]">{t.journey.titleHighlight}</span>
+                        </h2>
                         <div className="h-1 w-20 bg-[#c89e4c] mx-auto rounded-full"></div>
                     </div>
 
@@ -49,12 +93,7 @@ export default function TracksPage() {
                         {/* Connecting Line (Desktop) */}
                         <div className="hidden md:block absolute top-12 right-[10%] left-[10%] h-0.5 bg-gradient-to-l from-transparent via-[#c89e4c]/30 to-transparent -z-10"></div>
 
-                        {[
-                            { icon: Target, title: "تحديد الهدف", desc: "نناقش معك أهدافك والسبب وراء رغبتك في التعلم." },
-                            { icon: Zap, title: "قياس المستوى", desc: "اختبار دقيق لتحديد نقطة البداية الصحيحة لك." },
-                            { icon: Calendar, title: "خطة مخصصة", desc: "نصمم لك جدولاً ومنهجاً يناسب وقتك وهدفك." },
-                            { icon: Users, title: "بداية الرحلة", desc: "ابدأ دروسك المباشرة مع معلمك الخاص فوراً." },
-                        ].map((step, idx) => (
+                        {journeySteps.map((step, idx) => (
                             <motion.div
                                 key={idx}
                                 initial={{ opacity: 0, y: 20 }}
@@ -78,12 +117,12 @@ export default function TracksPage() {
             <section className="py-20 bg-white/5">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-white mb-4">استكشف مساراتنا التفصيلية</h2>
-                        <p className="text-gray-400">كل مسار مصمم بعناية ليغطي جانباً محدداً من اللغة باحترافية</p>
+                        <h2 className="text-3xl font-bold text-white mb-4">{t.tracks.title}</h2>
+                        <p className="text-gray-400">{t.journey.subtitle}</p>
                     </div>
 
                     <div className="grid lg:grid-cols-2 gap-8">
-                        {tracks.map((track, idx) => (
+                        {tracksData.map((track, idx) => (
                             <motion.div
                                 key={track.id}
                                 id={track.id}
@@ -91,42 +130,37 @@ export default function TracksPage() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5 }}
-                                className={`flex flex-col md:flex-row gap-6 bg-midnight border ${track.special ? 'border-[#c89e4c]/40 shadow-[0_0_30px_rgba(200,158,76,0.1)]' : 'border-white/10'} p-8 rounded-3xl group hover:bg-white/[0.02] transition-colors scroll-mt-24`}
+                                className={`flex flex-col gap-6 bg-midnight border ${track.special ? 'border-[#c89e4c]/40 shadow-[0_0_30px_rgba(200,158,76,0.1)]' : 'border-white/10'} p-8 rounded-3xl group hover:bg-white/[0.02] transition-colors scroll-mt-24`}
                             >
-                                <div className="flex-shrink-0">
-                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${track.special ? 'bg-[#c89e4c] text-midnight' : 'bg-white/10 text-[#c89e4c]'}`}>
-                                        <track.icon size={32} strokeWidth={1.5} />
-                                    </div>
-                                </div>
-
                                 <div className="flex-grow">
                                     <h3 className="text-2xl font-bold text-white mb-3 flex items-center gap-2">
                                         {track.title}
-                                        {track.special && <span className="text-xs bg-[#c89e4c] text-midnight px-2 py-0.5 rounded-full">مميز</span>}
+                                        {track.special && <span className="text-xs bg-[#c89e4c] text-midnight px-2 py-0.5 rounded-full font-bold">
+                                            {language === 'ar' ? 'مميز' : language === 'de' ? 'Besonders' : 'Special'}
+                                        </span>}
                                     </h3>
-                                    <p className="text-gray-300 mb-6 leading-relaxed">
+                                    <p className="text-gray-300 mb-6 leading-relaxed font-medium">
                                         {track.desc}
                                     </p>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                                        {track.features.slice(0, 4).map((feature, i) => (
-                                            <div key={i} className="flex items-center gap-2">
-                                                <CheckCircle2 size={16} className="text-[#c89e4c] flex-shrink-0" />
-                                                <span className="text-sm text-gray-400">{feature}</span>
+                                    <div className="grid grid-cols-1 gap-3 mb-6">
+                                        {track.features.map((feature, i) => (
+                                            <div key={i} className="flex items-start gap-2">
+                                                <CheckCircle2 size={18} className="text-[#c89e4c] flex-shrink-0 mt-0.5" />
+                                                <span className="text-sm text-gray-400 font-medium">{feature}</span>
                                             </div>
                                         ))}
                                     </div>
 
                                     <Link
                                         href="/teachers"
-                                        className={`w-full text-center py-3 px-4 rounded-xl font-bold transition-all duration-300 block ${track.special
-                                                ? 'bg-[#c89e4c] text-midnight hover:bg-[#d4af37] shadow-lg shadow-[#c89e4c]/10'
-                                                : 'bg-white/5 text-[#c89e4c] border border-[#c89e4c]/20 hover:bg-[#c89e4c] hover:text-midnight'
+                                        className={`w-full text-center py-3 px-4 rounded-xl font-extrabold transition-all duration-300 block ${track.special
+                                            ? 'bg-[#c89e4c] text-midnight hover:bg-[#d4af37] shadow-lg shadow-[#c89e4c]/10'
+                                            : 'bg-white/5 text-[#c89e4c] border border-[#c89e4c]/20 hover:bg-[#c89e4c] hover:text-midnight'
                                             }`}
                                     >
-                                        احجز حصتك التجريبية الآن
+                                        {t.hero.ctaBookTrial}
                                     </Link>
-
                                 </div>
                             </motion.div>
                         ))}

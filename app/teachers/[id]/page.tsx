@@ -77,7 +77,48 @@ export default function TeacherDetailsPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Use Arabic name for admin dashboard consistency, or local name
+        // Validation
+        if (!formData.name.trim()) {
+            alert(language === 'ar' ? 'من فضلك أدخل اسمك' : 'Please enter your name');
+            return;
+        }
+
+        if (!formData.phone.trim() || formData.phone.length < 10) {
+            alert(language === 'ar' ? 'من فضلك أدخل رقم هاتف صحيح (10 أرقام على الأقل)' : 'Please enter a valid phone number (at least 10 digits)');
+            return;
+        }
+
+        if (!formData.goal) {
+            alert(language === 'ar' ? 'من فضلك اختر هدفك من التعلم' : 'Please select your learning goal');
+            return;
+        }
+
+        if (!formData.level) {
+            alert(language === 'ar' ? 'من فضلك اختر مستواك الحالي' : 'Please select your current level');
+            return;
+        }
+
+        if (!formData.timeline) {
+            alert(language === 'ar' ? 'من فضلك اختر الإطار الزمني' : 'Please select your timeline');
+            return;
+        }
+
+        if (formData.days.length === 0) {
+            alert(language === 'ar' ? 'من فضلك اختر يوم واحد على الأقل' : 'Please select at least one day');
+            return;
+        }
+
+        if (formData.times.length === 0) {
+            alert(language === 'ar' ? 'من فضلك اختر وقت واحد على الأقل' : 'Please select at least one time');
+            return;
+        }
+
+        if (!formData.source) {
+            alert(language === 'ar' ? 'من فضلك اختر كيف سمعت عنا' : 'Please select how you heard about us');
+            return;
+        }
+
+        // Use Arabic name for admin dashboard consistency
         const teacherNameForBooking = teacher.name?.ar || getContent(teacher.name);
 
         const bookingData = {
@@ -96,14 +137,35 @@ export default function TeacherDetailsPage() {
             });
 
             if (res.ok) {
+                const booking = await res.json();
+
+                // Send WhatsApp notification
+                const whatsappMessage = encodeURIComponent(
+                    `🎓 *حجز جديد - DE1 Academy*\n\n` +
+                    `👤 *الاسم:* ${formData.name}\n` +
+                    `📱 *الهاتف:* ${formData.phone}\n` +
+                    `👨‍🏫 *المعلم:* ${teacherNameForBooking}\n` +
+                    `🎯 *الهدف:* ${formData.goal}\n` +
+                    `📊 *المستوى:* ${formData.level}\n` +
+                    `⏰ *الإطار الزمني:* ${formData.timeline}\n` +
+                    `📅 *الأيام:* ${formData.days.join(', ')}\n` +
+                    `🕐 *الأوقات:* ${formData.times.join(', ')}\n` +
+                    `📢 *المصدر:* ${formData.source}\n` +
+                    `🆔 *رقم الحجز:* ${booking.id || 'N/A'}\n\n` +
+                    `_تم الإرسال من موقع DE1 Academy_`
+                );
+
+                // Open WhatsApp (replace with your WhatsApp number)
+                const whatsappNumber = '201551582735'; // Your WhatsApp number
+                window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
+
                 setSubmitted(true);
-                // Clear form?
             } else {
-                alert('فشل الحجز. يرجى المحاولة مرة أخرى.');
+                alert(language === 'ar' ? 'فشل الحجز. يرجى المحاولة مرة أخرى.' : 'Booking failed. Please try again.');
             }
         } catch (err) {
             console.error(err);
-            alert('حدث خطأ ما.');
+            alert(language === 'ar' ? 'حدث خطأ ما. يرجى المحاولة مرة أخرى.' : 'An error occurred. Please try again.');
         }
     };
 
@@ -116,6 +178,7 @@ export default function TeacherDetailsPage() {
                     <motion.div
                         initial={{ opacity: 0, x: dir === 'rtl' ? 50 : -50 }}
                         animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
                         className="space-y-8 order-2 lg:order-1"
                     >
                         <div className="bg-[#111827] rounded-3xl p-8 border border-white/5 shadow-2xl">
@@ -181,12 +244,12 @@ export default function TeacherDetailsPage() {
                     <motion.div
                         initial={{ opacity: 0, x: dir === 'rtl' ? -50 : 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
+                        transition={{ delay: 0.05, duration: 0.3 }}
                         className="bg-[#111827] rounded-3xl p-8 border border-white/5 border-t-4 border-t-gold shadow-2xl order-1 lg:order-2"
                     >
                         <div className="mb-8 text-center">
-                            <h2 className="text-3xl font-bold text-white mb-2">{t.booking.title}</h2>
-                            <p className="text-gray-400 font-medium">{t.booking.subtitle}</p>
+                            <h2 className="text-3xl font-extrabold text-white mb-2">{t.booking.title}</h2>
+                            <p className="text-gray-400 font-bold">{t.booking.subtitle}</p>
                         </div>
 
                         {submitted ? (
@@ -196,11 +259,11 @@ export default function TeacherDetailsPage() {
                                 className="bg-green-500/10 border border-green-500/20 rounded-2xl p-8 text-center"
                             >
                                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-white mb-2">{t.booking.successTitle}</h3>
-                                <p className="text-gray-400 font-medium">{t.booking.successMessage}</p>
+                                <h3 className="text-xl font-extrabold text-white mb-2">{t.booking.successTitle}</h3>
+                                <p className="text-gray-400 font-bold">{t.booking.successMessage}</p>
                                 <button
                                     onClick={() => setSubmitted(false)}
-                                    className="mt-6 text-gold font-bold hover:underline"
+                                    className="mt-6 text-gold font-extrabold hover:underline"
                                 >
                                     {t.booking.bookAnother}
                                 </button>
@@ -209,9 +272,9 @@ export default function TeacherDetailsPage() {
                             <form onSubmit={handleSubmit} className="space-y-6" dir={dir}>
                                 {/* Contact Info */}
                                 <div className="space-y-4">
-                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.contactInfo}</h3>
+                                    <h3 className={`text-white font-extrabold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.contactInfo}</h3>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-300 mb-2">{t.booking.name}</label>
+                                        <label className="block text-sm font-extrabold text-white mb-2">{t.booking.name}</label>
                                         <div className="relative">
                                             <User className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
@@ -219,14 +282,14 @@ export default function TeacherDetailsPage() {
                                                 required
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
                                                 placeholder={t.booking.namePlaceholder}
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-300 mb-2">{t.booking.phone}</label>
+                                        <label className="block text-sm font-extrabold text-white mb-2">{t.booking.phone}</label>
                                         <div className="relative">
                                             <Phone className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
@@ -234,7 +297,7 @@ export default function TeacherDetailsPage() {
                                                 required
                                                 value={formData.phone}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
                                                 placeholder={t.booking.phonePlaceholder}
                                                 style={{ direction: 'ltr', textAlign: dir === 'rtl' ? 'right' : 'left' }}
                                             />
@@ -246,7 +309,7 @@ export default function TeacherDetailsPage() {
 
                                 {/* Goals */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.goalsTitle}</h3>
+                                    <h3 className={`text-white font-extrabold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.goalsTitle}</h3>
                                     <div className="grid grid-cols-1 gap-2">
                                         {[
                                             { key: 'work', label: t.booking.goals.work },
@@ -266,7 +329,7 @@ export default function TeacherDetailsPage() {
                                                 <span className={`w-4 h-4 rounded-full border ${dir === 'rtl' ? 'ml-2' : 'mr-2'} flex items-center justify-center ${formData.goal === item.key ? 'border-gold' : 'border-gray-500'}`}>
                                                     {formData.goal === item.key && <div className="w-2 h-2 rounded-full bg-gold"></div>}
                                                 </span>
-                                                <span className="font-semibold">{item.label}</span>
+                                                <span className="font-bold">{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -274,7 +337,7 @@ export default function TeacherDetailsPage() {
 
                                 {/* Level */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.levelTitle}</h3>
+                                    <h3 className={`text-white font-extrabold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.levelTitle}</h3>
                                     <div className="grid grid-cols-2 gap-2">
                                         {[
                                             { key: 'beginner', label: t.booking.levels.beginner },
@@ -291,7 +354,7 @@ export default function TeacherDetailsPage() {
                                                     onChange={(e) => setFormData({ ...formData, level: e.target.value })}
                                                     className="hidden"
                                                 />
-                                                <span className="font-semibold">{item.label}</span>
+                                                <span className="font-bold">{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -299,11 +362,11 @@ export default function TeacherDetailsPage() {
 
                                 {/* Timeline */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.timelineTitle}</h3>
+                                    <h3 className={`text-white font-extrabold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.timelineTitle}</h3>
                                     <select
                                         value={formData.timeline}
                                         onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
                                     >
                                         <option value="" disabled className="bg-gray-900">{t.booking.timelinePlaceholder}</option>
                                         <option value="weeks" className="bg-gray-900">{t.booking.timelines.weeks}</option>
@@ -316,9 +379,9 @@ export default function TeacherDetailsPage() {
 
                                 {/* Availability */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.availabilityTitle}</h3>
+                                    <h3 className={`text-white font-extrabold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.availabilityTitle}</h3>
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-2">{t.booking.daysLabel}</p>
+                                        <p className="text-xs font-bold text-gray-400 mb-2">{t.booking.daysLabel}</p>
                                         <div className="flex flex-wrap gap-2">
                                             {['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'].map((dayKey) => (
                                                 <button
@@ -330,7 +393,7 @@ export default function TeacherDetailsPage() {
                                                             : [...formData.days, dayKey];
                                                         setFormData({ ...formData, days });
                                                     }}
-                                                    className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${formData.days.includes(dayKey) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${formData.days.includes(dayKey) ? 'bg-gold text-midnight border-gold font-extrabold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40 font-bold'}`}
                                                 >
                                                     {t.booking.days[dayKey as keyof typeof t.booking.days]}
                                                 </button>
@@ -338,7 +401,7 @@ export default function TeacherDetailsPage() {
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-2">{t.booking.timesLabel}</p>
+                                        <p className="text-xs font-bold text-gray-400 mb-2">{t.booking.timesLabel}</p>
                                         <div className="flex gap-2">
                                             {['morning', 'afternoon', 'evening'].map((timeKey) => (
                                                 <button
@@ -350,7 +413,7 @@ export default function TeacherDetailsPage() {
                                                             : [...formData.times, timeKey];
                                                         setFormData({ ...formData, times });
                                                     }}
-                                                    className={`flex-1 py-2 rounded-lg text-sm border transition-all ${formData.times.includes(timeKey) ? 'bg-gold text-midnight border-gold font-bold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40'}`}
+                                                    className={`flex-1 py-2 rounded-lg text-sm border transition-all ${formData.times.includes(timeKey) ? 'bg-gold text-midnight border-gold font-extrabold' : 'bg-transparent border-white/20 text-gray-400 hover:border-white/40 font-bold'}`}
                                                 >
                                                     {t.booking.times[timeKey as keyof typeof t.booking.times]}
                                                 </button>
@@ -361,11 +424,11 @@ export default function TeacherDetailsPage() {
 
                                 {/* Source */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.sourceTitle}</h3>
+                                    <h3 className={`text-white font-extrabold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.sourceTitle}</h3>
                                     <select
                                         value={formData.source}
                                         onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
                                     >
                                         <option value="" disabled className="bg-gray-900">{t.booking.sourcePlaceholder}</option>
                                         <option value="friend" className="bg-gray-900">{t.booking.sources.friend}</option>
@@ -379,7 +442,7 @@ export default function TeacherDetailsPage() {
 
                                 <button
                                     type="submit"
-                                    className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold rounded-xl transition-colors shadow-lg shadow-gold/10 flex items-center justify-center gap-2 mt-8 group"
+                                    className="w-full py-4 bg-gold hover:bg-gold-shiny text-midnight font-extrabold rounded-xl transition-colors shadow-lg shadow-gold/10 flex items-center justify-center gap-2 mt-8 group"
                                 >
                                     <span>{t.booking.confirm}</span>
                                     <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />

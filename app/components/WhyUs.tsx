@@ -31,8 +31,8 @@ export default function WhyUs({ id }: { id?: string }) {
             <div className="container mx-auto px-4">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-                    {/* Left Side: Cards */}
-                    <div className="grid gap-6">
+                    {/* Cards - Order changes based on language */}
+                    <div className={`grid gap-6 ${isRTL ? 'lg:order-1' : 'lg:order-2'}`}>
                         {benefits.map((benefit, idx) => (
                             <motion.div
                                 key={idx}
@@ -53,12 +53,12 @@ export default function WhyUs({ id }: { id?: string }) {
                         ))}
                     </div>
 
-                    {/* Right Side: Content */}
+                    {/* Content - Order changes based on language */}
                     <motion.div
                         initial={{ opacity: 0, x: isRTL ? 30 : -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="text-right"
+                        className={`${isRTL ? 'text-right lg:order-2' : 'text-left lg:order-1'}`}
                         dir={isRTL ? "rtl" : "ltr"}
                     >
                         <div className="inline-block px-4 py-1 rounded-full border border-gold/20 text-gold text-sm font-medium mb-6">

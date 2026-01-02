@@ -83,7 +83,7 @@ export default function Teachers() {
                                     initial={{ opacity: 0, y: 30 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.1 }}
+                                    transition={{ delay: idx * 0.03, duration: 0.3 }}
                                     className="bg-[#111827] rounded-3xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all duration-300 group shadow-lg flex flex-col"
                                 >
                                     {/* Image Area */}
