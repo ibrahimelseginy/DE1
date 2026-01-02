@@ -17,7 +17,13 @@ const getTeachersLegacy = () => {
 };
 
 async function getTeacher(id: string) {
-    // 1. Try DB
+    // In development, use JSON directly for speed
+    if (process.env.NODE_ENV === 'development') {
+        const teachers = getTeachersLegacy();
+        return teachers.find((t: any) => String(t.id) === id);
+    }
+
+    // In production, try DB first
     try {
         const dbTeacher = await prisma.teacher.findUnique({
             where: { id }
@@ -30,7 +36,7 @@ async function getTeacher(id: string) {
         console.error('DB Fetch Error:', e);
     }
 
-    // 2. Fallback to Legacy JSON
+    // Fallback to Legacy JSON
     const teachers = getTeachersLegacy();
     return teachers.find((t: any) => String(t.id) === id);
 }

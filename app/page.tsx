@@ -24,6 +24,12 @@ const getTeachersLegacy = () => {
 };
 
 async function getTeachers() {
+  // In development, use JSON directly for speed
+  if (process.env.NODE_ENV === 'development') {
+    return getTeachersLegacy();
+  }
+
+  // In production, use Prisma with fallback
   try {
     const dbTeachers = await prisma.teacher.findMany();
     if (dbTeachers.length > 0) {
