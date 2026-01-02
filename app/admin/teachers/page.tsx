@@ -1,40 +1,30 @@
 "use client";
 import React, { useState } from 'react';
+import useSWR, { mutate } from 'swr';
 import Link from 'next/link';
 
 import { Edit, Trash2, Star, Eye, Plus } from 'lucide-react';
 
 export default function AdminTeachersPage() {
-    const [teachers, setTeachers] = useState<any[]>([]);
+    const { data: teachers = [], error } = useSWR('/api/teachers');
     const [searchTerm, setSearchTerm] = useState('');
 
-    const fetchTeachers = async () => {
-        try {
-            const res = await fetch('/api/teachers');
-            const data = await res.json();
-            setTeachers(data);
-        } catch (error) {
-            console.error("Failed to load teachers", error);
-        }
-    };
 
-    React.useEffect(() => {
-        fetchTeachers();
-    }, []);
-
-    const filteredTeachers = teachers.filter(t => {
+    const filteredTeachers = teachers.filter((t: any) => {
         const name = typeof t.name === 'string' ? t.name : t.name?.ar || '';
         const role = typeof t.role === 'string' ? t.role : t.role?.ar || '';
         return name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             role.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
+
     const handleDelete = async (id: number) => {
         if (confirm('هل أنت متأكد من حذف هذا المعلم؟')) {
             try {
                 const res = await fetch(`/api/teachers/${id}`, { method: 'DELETE' });
                 if (res.ok) {
-                    setTeachers(teachers.filter(t => t.id !== id));
+                    // Revalidate the cache
+                    mutate('/api/teachers');
                     alert("تم الحذف بنجاح");
                 } else {
                     alert("فشل الحذف");

@@ -1,41 +1,19 @@
 "use client";
 import React from 'react';
+import useSWR from 'swr';
 import { Users, BookOpen, Clock, TrendingUp, Calendar } from 'lucide-react';
+
 export default function AdminDashboard() {
-    const [teacherCount, setTeacherCount] = React.useState(0);
-    const [bookings, setBookings] = React.useState<any[]>([]);
-    const [bookingStats, setBookingStats] = React.useState({ confirmed: 0, pending: 0, cancelled: 0 });
+    // Use SWR for automatic caching and revalidation
+    const { data: bookings = [], error: bookingsError } = useSWR('/api/bookings');
+    const { data: teachers = [], error: teachersError } = useSWR('/api/teachers');
 
-    React.useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                // Fetch Bookings
-                const bookingsRes = await fetch('/api/bookings');
-                if (bookingsRes.ok) {
-                    const data = await bookingsRes.json();
-                    setBookings(data);
-                    setBookingStats({
-                        confirmed: data.filter((b: any) => b.status === 'مؤكد').length,
-                        pending: data.filter((b: any) => b.status === 'قيد الانتظار').length,
-                        cancelled: data.filter((b: any) => b.status === 'ملغي').length
-                    });
-                }
-
-                // Fetch Teachers
-                const teachersRes = await fetch('/api/teachers');
-                if (teachersRes.ok) {
-                    const teachersData = await teachersRes.json();
-                    setTeacherCount(teachersData.length);
-                }
-            } catch (error) {
-                console.error('Failed to fetch dashboard data:', error);
-            }
-        };
-
-        fetchDashboardData();
-        const interval = setInterval(fetchDashboardData, 5000);
-        return () => clearInterval(interval);
-    }, []);
+    const teacherCount = teachers.length;
+    const bookingStats = React.useMemo(() => ({
+        confirmed: bookings.filter((b: any) => b.status === 'مؤكد').length,
+        pending: bookings.filter((b: any) => b.status === 'قيد الانتظار').length,
+        cancelled: bookings.filter((b: any) => b.status === 'ملغي').length
+    }), [bookings]);
 
     const stats = [
         { label: 'عدد المعلمين', value: teacherCount.toString(), icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10' },
