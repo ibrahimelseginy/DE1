@@ -2,9 +2,12 @@
 import React from 'react';
 import { Instagram, MessageCircle } from 'lucide-react';
 
+import { useLanguage } from '../context/LanguageContext';
+
 export default function FloatingSocials() {
+    const { dir } = useLanguage();
     return (
-        <div className="fixed bottom-8 left-8 z-50 flex flex-col gap-4">
+        <div className={`fixed bottom-8 z-50 flex flex-col gap-4 ${dir === 'rtl' ? 'right-8' : 'left-8'}`}>
             {/* Floating Pill Container */}
             <div className="flex flex-col items-center gap-6 bg-midnight/80 backdrop-blur-md border border-gold/20 p-4 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.1)]">
 

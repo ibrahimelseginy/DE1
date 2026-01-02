@@ -1,0 +1,104 @@
+[
+    {
+        "id": 1,
+        "name": {
+            "ar": "أ/ أسامة عيسى",
+            "en": "Mr. Osama Eissa",
+            "de": "Herr Osama Eissa"
+        },
+        "role": {
+            "ar": "خبير اللغة الألمانية",
+            "en": "German Language Expert",
+            "de": "Experte für deutsche Sprache"
+        },
+        "stats": {
+            "stars": "4.9",
+            "sessions": "+1000",
+            "exp": {
+                "ar": "+4 سنوات",
+                "en": "+4 Years",
+                "de": "+4 Jahre"
+            }
+        },
+        "bio": {
+            "ar": "متخصص في تحويل المبتدئين إلى متحدثين بطلاقة من خلال منهج تفاعلي يركز على احتياجاتك المهنية.",
+            "en": "Specialized in transforming beginners into fluent speakers through an interactive curriculum focused on your professional needs.",
+            "de": "Spezialisiert darauf, Anfänger in fließende Sprecher zu verwandeln, durch einen interaktiven Lehrplan, der sich auf Ihre beruflichen Bedürfnisse konzentriert."
+        },
+        "image": "/teachers/osama.jpg",
+        "videoUrl": "",
+        "pricing": {
+            "duration": 70,
+            "currency": "EGP",
+            "prices": {
+                "EGP": {
+                    "price": 500,
+                    "oldPrice": 750
+                },
+                "USD": {
+                    "price": 15,
+                    "oldPrice": 25
+                },
+                "SAR": {
+                    "price": 60,
+                    "oldPrice": 100
+                },
+                "KWD": {
+                    "price": 5,
+                    "oldPrice": 8
+                }
+            }
+        }
+    },
+    {
+        "id": 2,
+        "name": {
+            "ar": "أ/ سارة محمد",
+            "en": "Ms. Sara Mohamed",
+            "de": "Frau Sara Mohamed"
+        },
+        "role": {
+            "ar": "مدربة محادثة انجليزية",
+            "en": "English Conversation Coach",
+            "de": "Englisch-Konversationstrainerin"
+        },
+        "stats": {
+            "stars": "5.0",
+            "sessions": "+2500",
+            "exp": {
+                "ar": "+6 سنوات",
+                "en": "+6 Years",
+                "de": "+6 Jahre"
+            }
+        },
+        "bio": {
+            "ar": "ساعدت مئات الطلاب على اجتياز اختبارات الآيلتس بفضل أسلوبها المبسط والعملي.",
+            "en": "Helped hundreds of students pass IELTS exams thanks to her simplified and practical approach.",
+            "de": "Hat Hunderten von Studenten geholfen, IELTS-Prüfungen dank ihres vereinfachten und praktischen Ansatzes zu bestehen."
+        },
+        "image": "/teachers/sara.jpg",
+        "videoUrl": "",
+        "pricing": {
+            "duration": 70,
+            "currency": "EGP",
+            "prices": {
+                "EGP": {
+                    "price": 450,
+                    "oldPrice": 600
+                },
+                "USD": {
+                    "price": 12,
+                    "oldPrice": 20
+                },
+                "SAR": {
+                    "price": 50,
+                    "oldPrice": 80
+                },
+                "KWD": {
+                    "price": 4,
+                    "oldPrice": 7
+                }
+            }
+        }
+    }
+]

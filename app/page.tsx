@@ -13,13 +13,44 @@ export default function Home() {
     <main className="min-h-screen bg-midnight text-foreground font-sans selection:bg-gold selection:text-midnight overflow-x-hidden">
       <Navbar />
       <Hero />
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      </div>
+
       {/* "Why DE1" Section which introduces the concept */}
       <WhyUs id="why-us" />
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      </div>
+
       {/* "Journey" Section showing the steps */}
       <Journey />
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      </div>
+
       <Services />
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      </div>
+
       <Teachers />
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      </div>
+
       <Testimonials />
+
       <Footer />
       <FloatingSocials />
     </main>

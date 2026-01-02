@@ -1,21 +1,47 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { teachers as initialTeachers } from '../../data/teachers';
+
 import { Edit, Trash2, Star, Eye, Plus } from 'lucide-react';
 
 export default function AdminTeachersPage() {
-    const [teachers, setTeachers] = useState(initialTeachers);
+    const [teachers, setTeachers] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const filteredTeachers = teachers.filter(t =>
-        t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.role.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const fetchTeachers = async () => {
+        try {
+            const res = await fetch('/api/teachers');
+            const data = await res.json();
+            setTeachers(data);
+        } catch (error) {
+            console.error("Failed to load teachers", error);
+        }
+    };
 
-    const handleDelete = (id: number) => {
+    React.useEffect(() => {
+        fetchTeachers();
+    }, []);
+
+    const filteredTeachers = teachers.filter(t => {
+        const name = typeof t.name === 'string' ? t.name : t.name?.ar || '';
+        const role = typeof t.role === 'string' ? t.role : t.role?.ar || '';
+        return name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            role.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const handleDelete = async (id: number) => {
         if (confirm('هل أنت متأكد من حذف هذا المعلم؟')) {
-            setTeachers(teachers.filter(t => t.id !== id));
+            try {
+                const res = await fetch(`/api/teachers/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    setTeachers(teachers.filter(t => t.id !== id));
+                    alert("تم الحذف بنجاح");
+                } else {
+                    alert("فشل الحذف");
+                }
+            } catch (error) {
+                console.error("Delete failed", error);
+            }
         }
     };
 
@@ -43,6 +69,7 @@ export default function AdminTeachersPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-black/20 border border-white/10 rounded-lg py-2 px-4 text-white focus:outline-none focus:border-gold/50"
+                    suppressHydrationWarning
                 />
             </div>
 
@@ -63,14 +90,20 @@ export default function AdminTeachersPage() {
                         <tbody className="divide-y divide-white/5">
                             {filteredTeachers.map((teacher) => (
                                 <tr key={teacher.id} className="hover:bg-white/5 transition-colors">
-                                    <td className="p-4 font-bold text-white">{teacher.name}</td>
-                                    <td className="p-4 text-gray-300">{teacher.role}</td>
+                                    <td className="p-4 font-bold text-white">
+                                        {typeof teacher.name === 'string' ? teacher.name : teacher.name?.ar}
+                                    </td>
+                                    <td className="p-4 text-gray-300">
+                                        {typeof teacher.role === 'string' ? teacher.role : teacher.role?.ar}
+                                    </td>
                                     <td className="p-4 flex items-center gap-1 text-gold">
                                         <Star size={16} fill="currentColor" />
                                         <span>{teacher.stats.stars}</span>
                                     </td>
                                     <td className="p-4 text-gray-300">{teacher.stats.sessions}</td>
-                                    <td className="p-4 text-gray-300">{teacher.stats.exp}</td>
+                                    <td className="p-4 text-gray-300">
+                                        {typeof teacher.stats.exp === 'object' ? teacher.stats.exp.ar : teacher.stats.exp}
+                                    </td>
                                     <td className="p-4">
                                         <div className="flex items-center justify-center gap-2">
                                             <a

@@ -22,7 +22,7 @@ export default function TracksPage() {
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-6xl font-lalezar text-white mb-6"
+                        className="text-4xl md:text-6xl font-bold text-white mb-6"
                     >
                         مسارات تعليمية <span className="text-[#c89e4c]">احترافية</span>
                     </motion.h1>
@@ -117,6 +117,15 @@ export default function TracksPage() {
                                         ))}
                                     </div>
 
+                                    <Link
+                                        href="/teachers"
+                                        className={`w-full text-center py-3 px-4 rounded-xl font-bold transition-all duration-300 block ${track.special
+                                                ? 'bg-[#c89e4c] text-midnight hover:bg-[#d4af37] shadow-lg shadow-[#c89e4c]/10'
+                                                : 'bg-white/5 text-[#c89e4c] border border-[#c89e4c]/20 hover:bg-[#c89e4c] hover:text-midnight'
+                                            }`}
+                                    >
+                                        احجز حصتك التجريبية الآن
+                                    </Link>
 
                                 </div>
                             </motion.div>

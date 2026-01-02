@@ -101,6 +101,8 @@ export const translations = {
             experience: 'خبرة',
             years: 'سنوات',
             notFound: 'المعلم غير موجود',
+            bio: 'نبذة عن المعلم',
+            video: 'فيديو تعريفي',
         },
         testimonials: {
             title: "ماذا يقول طلابنا؟",
@@ -320,6 +322,8 @@ export const translations = {
             experience: 'Experience',
             years: 'Years',
             notFound: 'Teacher not found',
+            bio: 'About the Teacher',
+            video: 'Intro Video',
         },
         testimonials: {
             title: "What our students say?",
@@ -539,6 +543,8 @@ export const translations = {
             experience: 'Erfahrung',
             years: 'Jahre',
             notFound: 'Lehrer nicht gefunden',
+            bio: 'Über den Lehrer',
+            video: 'Einführungsvideo',
         },
         testimonials: {
             title: "Was unsere Schüler sagen?",

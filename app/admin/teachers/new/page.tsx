@@ -7,20 +7,51 @@ export default function NewTeacherPage() {
     const router = useRouter();
 
     const [formData, setFormData] = useState({
-        name: '',
-        role: '',
-        bio: '',
+        name: { ar: '', en: '', de: '' },
+        role: { ar: '', en: '', de: '' },
+        bio: { ar: '', en: '', de: '' },
+        image: '',
         videoUrl: '',
         stats: {
             stars: 5.0,
             sessions: '0',
-            exp: '0 سنوات'
+            exp: { ar: '', en: '', de: '' }
+        },
+        pricing: {
+            duration: 70,
+            currency: 'EGP' as 'EGP' | 'USD' | 'SAR' | 'KWD',
+            prices: {
+                EGP: { price: 500, oldPrice: 750 },
+                USD: { price: 15, oldPrice: 25 },
+                SAR: { price: 60, oldPrice: 100 },
+                KWD: { price: 5, oldPrice: 8 },
+            }
         }
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleContentChange = (field: string, lang: string, value: string) => {
+        setFormData((prev: any) => ({
+            ...prev,
+            [field]: {
+                ...prev[field],
+                [lang]: value
+            }
+        }));
+    };
+
+    const handleStatExpChange = (lang: string, value: string) => {
+        setFormData((prev: any) => ({
+            ...prev,
+            stats: {
+                ...prev.stats,
+                exp: { ...prev.stats.exp, [lang]: value }
+            }
+        }));
     };
 
     const handleStatChange = (stat: string, value: string) => {
@@ -33,12 +64,25 @@ export default function NewTeacherPage() {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Here you would make an API call to create
-        alert("تم إضافة المعلم بنجاح! (محاكاة)");
-        console.log("New Teacher Data:", formData);
-        router.push('/admin/teachers');
+        try {
+            const res = await fetch('/api/teachers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                alert("تم إضافة المعلم بنجاح!");
+                router.push('/admin/teachers');
+            } else {
+                alert("حدث خطأ أثناء الإضافة.");
+            }
+        } catch (error) {
+            console.error("Error creating teacher:", error);
+            alert("حدث خطأ في الاتصال.");
+        }
     };
 
     return (
@@ -53,46 +97,126 @@ export default function NewTeacherPage() {
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Basic Info */}
                 <div className="bg-[#1F2937] p-6 rounded-2xl border border-white/5 space-y-6">
-                    <h3 className="text-xl font-bold text-white mb-4 border-b border-white/5 pb-4">المعلومات الأساسية</h3>
+                    <h3 className="text-xl font-bold text-white mb-4 border-b border-white/5 pb-4">المعلومات الأساسية (متعدد اللغات)</h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-2">اسم المعلم</label>
+                    {/* Name */}
+                    <div className="space-y-3">
+                        <label className="block text-sm text-gray-400">اسم المعلم</label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
-                                placeholder="مثال: أحمد محمد"
+                                placeholder="الاسم (عربي)"
+                                value={formData.name.ar}
+                                onChange={(e) => handleContentChange('name', 'ar', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="rtl"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Name (English)"
+                                value={formData.name.en}
+                                onChange={(e) => handleContentChange('name', 'en', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Name (Deutsch)"
+                                value={formData.name.de}
+                                onChange={(e) => handleContentChange('name', 'de', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-2">المسمى الوظيفي (Role)</label>
+                    </div>
+
+                    {/* Role */}
+                    <div className="space-y-3">
+                        <label className="block text-sm text-gray-400">المسمى الوظيفي</label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <input
                                 type="text"
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                required
-                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
-                                placeholder="مثال: مدرس لغة ألمانية أول"
+                                placeholder="الدور (عربي)"
+                                value={formData.role.ar}
+                                onChange={(e) => handleContentChange('role', 'ar', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="rtl"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Role (English)"
+                                value={formData.role.en}
+                                onChange={(e) => handleContentChange('role', 'en', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Rolle (Deutsch)"
+                                value={formData.role.de}
+                                onChange={(e) => handleContentChange('role', 'de', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Bio */}
+                    <div className="space-y-3">
+                        <label className="block text-sm text-gray-400">نبذة عن المعلم</label>
+                        <div className="grid grid-cols-1 gap-4">
+                            <textarea
+                                placeholder="النبذة (عربي)"
+                                value={formData.bio.ar}
+                                onChange={(e) => handleContentChange('bio', 'ar', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="rtl"
+                                rows={2}
+                            />
+                            <textarea
+                                placeholder="Bio (English)"
+                                value={formData.bio.en}
+                                onChange={(e) => handleContentChange('bio', 'en', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
+                                rows={2}
+                            />
+                            <textarea
+                                placeholder="Bio (Deutsch)"
+                                value={formData.bio.de}
+                                onChange={(e) => handleContentChange('bio', 'de', e.target.value)}
+                                className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                dir="ltr"
+                                rows={2}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-2">نبذة عن المعلم (Bio)</label>
-                        <textarea
-                            name="bio"
-                            value={formData.bio}
-                            onChange={handleChange}
-                            required
-                            rows={4}
-                            className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
-                            placeholder="اكتب نبذة مختصرة..."
-                        />
+                        <label className="block text-sm text-gray-400 mb-2">صورة المعلم</label>
+                        <div className="space-y-3">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setFormData(prev => ({ ...prev, image: reader.result as string }));
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-midnight hover:file:bg-gold-shiny cursor-pointer"
+                            />
+                            {formData.image && (
+                                <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-gold/20">
+                                    <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">اختر صورة من جهازك (JPG, PNG)</p>
                     </div>
                 </div>
 
@@ -113,6 +237,76 @@ export default function NewTeacherPage() {
                             placeholder="https://youtube.com/..."
                             className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
                         />
+                    </div>
+                </div>
+
+                {/* Pricing */}
+                <div className="bg-[#1F2937] p-6 rounded-2xl border border-white/5 space-y-6">
+                    <h3 className="text-xl font-bold text-white mb-4 border-b border-white/5 pb-4">الأسعار والخصومات</h3>
+
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-2">مدة الحصة (بالدقائق)</label>
+                        <input
+                            type="number"
+                            value={formData.pricing.duration}
+                            onChange={(e) => setFormData(prev => ({
+                                ...prev,
+                                pricing: { ...prev.pricing, duration: parseInt(e.target.value) }
+                            }))}
+                            className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {(['EGP', 'USD', 'SAR', 'KWD'] as const).map((currency) => (
+                            <div key={currency} className="bg-black/20 p-4 rounded-xl border border-white/5">
+                                <h4 className="text-gold font-bold mb-3">{currency}</h4>
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">السعر الحالي</label>
+                                        <input
+                                            type="number"
+                                            value={formData.pricing.prices[currency].price}
+                                            onChange={(e) => setFormData(prev => ({
+                                                ...prev,
+                                                pricing: {
+                                                    ...prev.pricing,
+                                                    prices: {
+                                                        ...prev.pricing.prices,
+                                                        [currency]: {
+                                                            ...prev.pricing.prices[currency],
+                                                            price: parseFloat(e.target.value)
+                                                        }
+                                                    }
+                                                }
+                                            }))}
+                                            className="w-full bg-black/30 border border-white/10 rounded-lg py-2 px-3 text-white text-sm focus:outline-none focus:border-gold/50"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">السعر القديم (مشطوب)</label>
+                                        <input
+                                            type="number"
+                                            value={formData.pricing.prices[currency].oldPrice}
+                                            onChange={(e) => setFormData(prev => ({
+                                                ...prev,
+                                                pricing: {
+                                                    ...prev.pricing,
+                                                    prices: {
+                                                        ...prev.pricing.prices,
+                                                        [currency]: {
+                                                            ...prev.pricing.prices[currency],
+                                                            oldPrice: parseFloat(e.target.value)
+                                                        }
+                                                    }
+                                                }
+                                            }))}
+                                            className="w-full bg-black/30 border border-white/10 rounded-lg py-2 px-3 text-white text-sm focus:outline-none focus:border-gold/50"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
@@ -146,17 +340,37 @@ export default function NewTeacherPage() {
                                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
                             />
                         </div>
-                        <div>
+                        <div className="md:col-span-3">
                             <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                                 <Award size={16} className="text-gold" />
-                                <span>الخبرة (Experience)</span>
+                                <span>الخبرة (Experience) - متعدد اللغات</span>
                             </label>
-                            <input
-                                type="text"
-                                value={formData.stats.exp}
-                                onChange={(e) => handleStatChange('exp', e.target.value)}
-                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="الخبرة (عربي)"
+                                    value={(formData.stats.exp as any)?.ar || ''}
+                                    onChange={(e) => handleStatExpChange('ar', e.target.value)}
+                                    className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                    dir="rtl"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Experience (English)"
+                                    value={(formData.stats.exp as any)?.en || ''}
+                                    onChange={(e) => handleStatExpChange('en', e.target.value)}
+                                    className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                    dir="ltr"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Erfahrung (Deutsch)"
+                                    value={(formData.stats.exp as any)?.de || ''}
+                                    onChange={(e) => handleStatExpChange('de', e.target.value)}
+                                    className="bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50"
+                                    dir="ltr"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

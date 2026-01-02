@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import FloatingSocials from "../../components/FloatingSocials";
-import { teachers } from '../../data/teachers';
 import { useParams } from 'next/navigation';
 import { Star, Clock, Award, CheckCircle, User, Phone, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function TeacherDetailsPage() {
-    const { t, dir } = useLanguage();
+    const { t, dir, language } = useLanguage();
     const params = useParams();
     const teacherId = Number(params.id);
-    const teacher = teachers.find(t => t.id === teacherId);
+    const [teacher, setTeacher] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -27,6 +27,41 @@ export default function TeacherDetailsPage() {
     });
     const [submitted, setSubmitted] = useState(false);
 
+    React.useEffect(() => {
+        const fetchTeacher = async () => {
+            try {
+                const res = await fetch(`/api/teachers/${teacherId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setTeacher(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch teacher", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTeacher();
+    }, [teacherId]);
+
+    // Helper to get localized content
+    const getContent = (content: any) => {
+        if (typeof content === 'string') return content;
+        return content?.[language] || content?.['ar'] || '';
+    };
+
+    if (loading) {
+        return (
+            <main className="min-h-screen bg-midnight text-foreground">
+                <Navbar />
+                <div className="min-h-[60vh] flex items-center justify-center pt-20">
+                    <div className="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                <Footer />
+            </main>
+        );
+    }
+
     if (!teacher) {
         return (
             <main className="min-h-screen bg-midnight text-foreground">
@@ -39,11 +74,37 @@ export default function TeacherDetailsPage() {
         );
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Here you would send the data to a backend
-        console.log("Booking:", { teacher: teacher.name, ...formData });
-        setSubmitted(true);
+
+        // Use Arabic name for admin dashboard consistency, or local name
+        const teacherNameForBooking = teacher.name?.ar || getContent(teacher.name);
+
+        const bookingData = {
+            teacherId: teacher.id,
+            teacher: teacherNameForBooking,
+            ...formData,
+            submittedAt: new Date().toISOString(),
+            status: 'قيد الانتظار' // Pending
+        };
+
+        try {
+            const res = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (res.ok) {
+                setSubmitted(true);
+                // Clear form?
+            } else {
+                alert('فشل الحجز. يرجى المحاولة مرة أخرى.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('حدث خطأ ما.');
+        }
     };
 
     return (
@@ -58,42 +119,42 @@ export default function TeacherDetailsPage() {
                         className="space-y-8 order-2 lg:order-1"
                     >
                         <div className="bg-[#111827] rounded-3xl p-8 border border-white/5 shadow-2xl">
-                            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-right" dir="rtl">
+                            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-start">
                                 {/* Image Placeholder */}
                                 <div className="w-32 h-32 rounded-full bg-slate-800 border-2 border-gold flex items-center justify-center text-gray-500 shrink-0 overflow-hidden relative">
                                     <div className="absolute inset-0 bg-gradient-to-tr from-midnight to-transparent opacity-50"></div>
-                                    <span className="z-10 text-sm">صورة المعلم</span>
+                                    <img src={teacher.image} alt={getContent(teacher.name)} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-grow">
-                                    <h1 className="text-3xl font-bold text-white mb-2">{teacher.name}</h1>
-                                    <p className="text-gold text-lg font-medium mb-4">{teacher.role}</p>
+                                    <h1 className="text-3xl font-extrabold text-white mb-2">{getContent(teacher.name)}</h1>
+                                    <p className="text-gold text-xl font-bold mb-4">{getContent(teacher.role)}</p>
 
                                     <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Star className="text-gold w-4 h-4" fill="currentColor" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.stars} {t.teachers.reviews}</span>
+                                            <span className="text-sm font-semibold text-gray-300">{teacher.stats.stars} {t.teachers.reviews}</span>
                                         </div>
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Clock className="text-gold w-4 h-4" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.sessions} {t.teachers.sessions}</span>
+                                            <span className="text-sm font-semibold text-gray-300">{teacher.stats.sessions} {t.teachers.sessions}</span>
                                         </div>
                                         <div className="bg-white/5 px-4 py-2 rounded-lg flex items-center gap-2 border border-white/5">
                                             <Award className="text-gold w-4 h-4" />
-                                            <span className="text-sm text-gray-300">{teacher.stats.exp} {t.teachers.experience}</span>
+                                            <span className="text-sm font-semibold text-gray-300">{getContent(teacher.stats.exp)}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-8 border-t border-white/10 pt-8" dir="rtl">
-                                <h3 className="text-xl font-bold text-white mb-4">نبذة عن المعلم</h3>
-                                <p className="text-gray-400 leading-relaxed">
-                                    {teacher.bio}
+                            <div className="mt-8 border-t border-white/10 pt-8">
+                                <h3 className="text-2xl font-bold text-white mb-4">{t.teachers.bio}</h3>
+                                <p className="text-gray-300 font-medium leading-relaxed text-lg">
+                                    {getContent(teacher.bio)}
                                 </p>
 
                                 {teacher.videoUrl && (
                                     <div className="mt-8">
-                                        <h3 className="text-xl font-bold text-white mb-4">فيديو تعريفي</h3>
+                                        <h3 className="text-2xl font-bold text-white mb-4">{t.teachers.video}</h3>
                                         <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg">
                                             {/* We can use an iframe if it's external, or video tag. Assuming mostly YouTube/Vimeo embeds or simple video links for now we used generic iframe thinking */}
                                             {teacher.videoUrl.includes('youtube') || teacher.videoUrl.includes('youtu.be') ? (
@@ -124,8 +185,8 @@ export default function TeacherDetailsPage() {
                         className="bg-[#111827] rounded-3xl p-8 border border-white/5 border-t-4 border-t-gold shadow-2xl order-1 lg:order-2"
                     >
                         <div className="mb-8 text-center">
-                            <h2 className="text-2xl font-bold text-white mb-2">{t.booking.title}</h2>
-                            <p className="text-gray-400 text-sm">{t.booking.subtitle}</p>
+                            <h2 className="text-3xl font-bold text-white mb-2">{t.booking.title}</h2>
+                            <p className="text-gray-400 font-medium">{t.booking.subtitle}</p>
                         </div>
 
                         {submitted ? (
@@ -136,10 +197,10 @@ export default function TeacherDetailsPage() {
                             >
                                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
                                 <h3 className="text-xl font-bold text-white mb-2">{t.booking.successTitle}</h3>
-                                <p className="text-gray-400">{t.booking.successMessage}</p>
+                                <p className="text-gray-400 font-medium">{t.booking.successMessage}</p>
                                 <button
                                     onClick={() => setSubmitted(false)}
-                                    className="mt-6 text-gold text-sm hover:underline"
+                                    className="mt-6 text-gold font-bold hover:underline"
                                 >
                                     {t.booking.bookAnother}
                                 </button>
@@ -148,9 +209,9 @@ export default function TeacherDetailsPage() {
                             <form onSubmit={handleSubmit} className="space-y-6" dir={dir}>
                                 {/* Contact Info */}
                                 <div className="space-y-4">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.contactInfo}</h3>
+                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.contactInfo}</h3>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-2">{t.booking.name}</label>
+                                        <label className="block text-sm font-bold text-gray-300 mb-2">{t.booking.name}</label>
                                         <div className="relative">
                                             <User className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
@@ -158,14 +219,14 @@ export default function TeacherDetailsPage() {
                                                 required
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
                                                 placeholder={t.booking.namePlaceholder}
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-300 mb-2">{t.booking.phone}</label>
+                                        <label className="block text-sm font-bold text-gray-300 mb-2">{t.booking.phone}</label>
                                         <div className="relative">
                                             <Phone className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none`} />
                                             <input
@@ -173,7 +234,7 @@ export default function TeacherDetailsPage() {
                                                 required
                                                 value={formData.phone}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
+                                                className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
                                                 placeholder={t.booking.phonePlaceholder}
                                                 style={{ direction: 'ltr', textAlign: dir === 'rtl' ? 'right' : 'left' }}
                                             />
@@ -185,7 +246,7 @@ export default function TeacherDetailsPage() {
 
                                 {/* Goals */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.goalsTitle}</h3>
+                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.goalsTitle}</h3>
                                     <div className="grid grid-cols-1 gap-2">
                                         {[
                                             { key: 'work', label: t.booking.goals.work },
@@ -205,7 +266,7 @@ export default function TeacherDetailsPage() {
                                                 <span className={`w-4 h-4 rounded-full border ${dir === 'rtl' ? 'ml-2' : 'mr-2'} flex items-center justify-center ${formData.goal === item.key ? 'border-gold' : 'border-gray-500'}`}>
                                                     {formData.goal === item.key && <div className="w-2 h-2 rounded-full bg-gold"></div>}
                                                 </span>
-                                                <span>{item.label}</span>
+                                                <span className="font-semibold">{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -213,7 +274,7 @@ export default function TeacherDetailsPage() {
 
                                 {/* Level */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.levelTitle}</h3>
+                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.levelTitle}</h3>
                                     <div className="grid grid-cols-2 gap-2">
                                         {[
                                             { key: 'beginner', label: t.booking.levels.beginner },
@@ -230,7 +291,7 @@ export default function TeacherDetailsPage() {
                                                     onChange={(e) => setFormData({ ...formData, level: e.target.value })}
                                                     className="hidden"
                                                 />
-                                                <span>{item.label}</span>
+                                                <span className="font-semibold">{item.label}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -238,11 +299,11 @@ export default function TeacherDetailsPage() {
 
                                 {/* Timeline */}
                                 <div className="space-y-3">
-                                    <h3 className={`text-white font-bold text-lg ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.timelineTitle}</h3>
+                                    <h3 className={`text-white font-bold text-xl ${dir === 'rtl' ? 'border-r-4 pr-3' : 'border-l-4 pl-3'} border-gold`}>{t.booking.timelineTitle}</h3>
                                     <select
                                         value={formData.timeline}
                                         onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white font-medium focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 appearance-none cursor-pointer"
                                     >
                                         <option value="" disabled className="bg-gray-900">{t.booking.timelinePlaceholder}</option>
                                         <option value="weeks" className="bg-gray-900">{t.booking.timelines.weeks}</option>
