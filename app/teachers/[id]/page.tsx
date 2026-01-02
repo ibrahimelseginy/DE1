@@ -1,8 +1,14 @@
 import React from 'react';
 import BookingClient from './BookingClient';
-import prisma from '@/lib/prisma';
 import fs from 'fs';
 import path from 'path';
+
+// Only import Prisma in production
+let prisma: any = null;
+if (process.env.NODE_ENV === 'production') {
+    const prismaModule = await import('@/lib/prisma');
+    prisma = prismaModule.default;
+}
 
 // Helper to get from JSON (Legacy fallback)
 const getTeachersLegacy = () => {

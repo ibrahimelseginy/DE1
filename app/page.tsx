@@ -7,9 +7,15 @@ import Teachers from "./components/Teachers";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import FloatingSocials from "./components/FloatingSocials";
-import prisma from "@/lib/prisma";
 import fs from 'fs';
 import path from 'path';
+
+// Only import Prisma in production
+let prisma: any = null;
+if (process.env.NODE_ENV === 'production') {
+  const prismaModule = await import('@/lib/prisma');
+  prisma = prismaModule.default;
+}
 
 // Helper to get from JSON (Legacy fallback)
 const getTeachersLegacy = () => {
