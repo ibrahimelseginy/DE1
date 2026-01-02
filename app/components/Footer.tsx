@@ -61,6 +61,7 @@ export default function Footer() {
                             <li><a href="/" className="text-gray-400 hover:text-gold transition-colors">{t.common.home}</a></li>
                             <li><a href="/why-de1" className="text-gray-400 hover:text-gold transition-colors">{t.common.about}</a></li>
                             <li><a href="/teachers" className="text-gray-400 hover:text-gold transition-colors">{t.common.teachers}</a></li>
+                            <li><a href="/refund-privacy" className="text-gray-400 hover:text-gold transition-colors">سياسة الاسترداد والخصوصية</a></li>
                             <li><a href="/teachers" className="text-gray-400 hover:text-gold transition-colors">{t.common.bookNow}</a></li>
                         </ul>
                     </div>
