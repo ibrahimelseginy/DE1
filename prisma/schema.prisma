@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Booking {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  teacherId   String
+  teacherName String
+  goal        String
+  level       String
+  timeline    String
+  days        String
+  times       String
+  source      String
+  status      String   @default("pending")
+  submittedAt DateTime @default(now())
+}
+
+model Teacher {
+  id        String   @id
+  data      String   // Store the whole JSON blob for now to be safe and fast? Or specific fields?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 import fs from 'fs';
 import path from 'path';
 
 const dataFilePath = path.join(process.cwd(), 'app', 'data', 'teachers.json');
 
-const getTeachers = () => {
+// Helper to get from JSON (Legacy)
+const getTeachersLegacy = () => {
     if (!fs.existsSync(dataFilePath)) return [];
     try {
         const fileContent = fs.readFileSync(dataFilePath, 'utf8');
@@ -14,22 +16,38 @@ const getTeachers = () => {
     }
 };
 
-const saveTeachers = (teachers: any[]) => {
-    fs.writeFileSync(dataFilePath, JSON.stringify(teachers, null, 2));
-};
-
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id: idStr } = await params;
-        const id = Number(idStr);
-        const teachers = getTeachers();
-        const teacher = teachers.find((t: any) => t.id === id);
 
-        if (!teacher) {
-            return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
+        // Try DB first
+        const dbTeacher = await prisma.teacher.findUnique({
+            where: { id: idStr }
+        });
+
+        if (dbTeacher) {
+            return NextResponse.json(JSON.parse(dbTeacher.data));
         }
-        return NextResponse.json(teacher);
+
+        // Fallback: Check Legacy JSON
+        const idNum = Number(idStr);
+        const legacyTeachers = getTeachersLegacy();
+        const legacyTeacher = legacyTeachers.find((t: any) => t.id === idNum);
+
+        if (legacyTeacher) {
+            // Migrate to DB automatically
+            await prisma.teacher.create({
+                data: {
+                    id: String(legacyTeacher.id),
+                    data: JSON.stringify(legacyTeacher)
+                }
+            });
+            return NextResponse.json(legacyTeacher);
+        }
+
+        return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
     } catch (error) {
+        console.error('Get Teacher Error:', error);
         return NextResponse.json({ error: 'Failed' }, { status: 500 });
     }
 }
@@ -37,21 +55,22 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id: idStr } = await params;
-        const id = Number(idStr);
         const body = await request.json();
-        const teachers = getTeachers();
 
-        const index = teachers.findIndex((t: any) => t.id === id);
-        if (index === -1) {
-            return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
-        }
+        // Save/Update in DB
+        // Using upsert to handle both existing and migrated records
+        await prisma.teacher.upsert({
+            where: { id: idStr },
+            update: { data: JSON.stringify(body) },
+            create: {
+                id: idStr,
+                data: JSON.stringify(body)
+            }
+        });
 
-        // Update preserving ID
-        teachers[index] = { ...teachers[index], ...body, id };
-        saveTeachers(teachers);
-
-        return NextResponse.json(teachers[index]);
+        return NextResponse.json(body);
     } catch (error) {
+        console.error('Update Teacher Error:', error);
         return NextResponse.json({ error: 'Failed' }, { status: 500 });
     }
 }
@@ -59,19 +78,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id: idStr } = await params;
-        const id = Number(idStr);
-        let teachers = getTeachers();
 
-        const initialLength = teachers.length;
-        teachers = teachers.filter((t: any) => t.id !== id);
+        // Delete from DB
+        await prisma.teacher.delete({
+            where: { id: idStr }
+        }).catch(() => { }); // Ignore if not found in DB
 
-        if (teachers.length === initialLength) {
-            return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
-        }
-
-        saveTeachers(teachers);
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error('Delete Teacher Error:', error);
         return NextResponse.json({ error: 'Failed' }, { status: 500 });
     }
 }

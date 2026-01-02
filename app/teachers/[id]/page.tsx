@@ -129,43 +129,55 @@ export default function TeacherDetailsPage() {
             status: 'قيد الانتظار' // Pending
         };
 
+
+
         try {
-            const res = await fetch('/api/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingData)
-            });
+            // 1. Try to save to Database (API)
+            let bookingId = 'pending';
+            try {
+                const res = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
 
-            if (res.ok) {
-                const booking = await res.json();
-
-                // Send WhatsApp notification
-                const whatsappMessage = encodeURIComponent(
-                    `🎓 *حجز جديد - DE1 Academy*\n\n` +
-                    `👤 *الاسم:* ${formData.name}\n` +
-                    `📱 *الهاتف:* ${formData.phone}\n` +
-                    `👨‍🏫 *المعلم:* ${teacherNameForBooking}\n` +
-                    `🎯 *الهدف:* ${formData.goal}\n` +
-                    `📊 *المستوى:* ${formData.level}\n` +
-                    `⏰ *الإطار الزمني:* ${formData.timeline}\n` +
-                    `📅 *الأيام:* ${formData.days.join(', ')}\n` +
-                    `🕐 *الأوقات:* ${formData.times.join(', ')}\n` +
-                    `📢 *المصدر:* ${formData.source}\n` +
-                    `🆔 *رقم الحجز:* ${booking.id || 'N/A'}\n\n` +
-                    `_تم الإرسال من موقع DE1 Academy_`
-                );
-
-                // Open WhatsApp (replace with your WhatsApp number)
-                const whatsappNumber = '201551582735'; // Your WhatsApp number
-                window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
-
-                setSubmitted(true);
-            } else {
-                alert(language === 'ar' ? 'فشل الحجز. يرجى المحاولة مرة أخرى.' : 'Booking failed. Please try again.');
+                if (res.ok) {
+                    const booking = await res.json();
+                    bookingId = booking.id;
+                } else {
+                    console.error('Failed to save booking to DB');
+                }
+            } catch (apiError) {
+                console.error('API Error:', apiError);
             }
+
+            // 2. Send WhatsApp notification (Always happens)
+            const whatsappMessage = encodeURIComponent(
+                `🎓 *حجز جديد - DE1 Academy*\n\n` +
+                `👤 *الاسم:* ${formData.name}\n` +
+                `📱 *الهاتف:* ${formData.phone}\n` +
+                `👨‍🏫 *المعلم:* ${teacherNameForBooking}\n` +
+                `🎯 *الهدف:* ${formData.goal}\n` +
+                `📊 *المستوى:* ${formData.level}\n` +
+                `⏰ *الإطار الزمني:* ${formData.timeline}\n` +
+                `📅 *الأيام:* ${formData.days.join(', ')}\n` +
+                `🕐 *الأوقات:* ${formData.times.join(', ')}\n` +
+                `📢 *المصدر:* ${formData.source}\n` +
+                `🆔 *رقم الحجز:* ${bookingId}\n\n` +
+                `_تم الإرسال من موقع DE1 Academy_`
+            );
+
+            // Open WhatsApp
+            const whatsappNumber = '201551582735';
+            window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
+
+            // 3. Show success UI
+            setSubmitted(true);
+
         } catch (err) {
-            console.error(err);
-            alert(language === 'ar' ? 'حدث خطأ ما. يرجى المحاولة مرة أخرى.' : 'An error occurred. Please try again.');
+            console.error('Unexpected error:', err);
+            // Even on unexpected error, try to show success if possible or alert
+            setSubmitted(true);
         }
     };
 
