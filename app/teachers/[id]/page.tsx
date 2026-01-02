@@ -35,6 +35,9 @@ async function getTeacher(id: string) {
     return teachers.find((t: any) => String(t.id) === id);
 }
 
+// Enable ISR - Revalidate every 5 minutes
+export const revalidate = 300;
+
 export default async function TeacherDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const teacher = await getTeacher(id);

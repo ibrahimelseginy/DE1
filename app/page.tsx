@@ -35,6 +35,9 @@ async function getTeachers() {
   return getTeachersLegacy();
 }
 
+// Enable ISR (Incremental Static Regeneration) - Revalidate every 5 minutes
+export const revalidate = 300; // 5 minutes in seconds
+
 export default async function Home() {
   const teachers = await getTeachers();
 
