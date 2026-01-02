@@ -12,7 +12,7 @@ export default function Testimonials() {
     const testimonials = t.testimonials.items.map((item, index) => ({
         ...item,
         rating: 5,
-        image: `https://ui-avatars.com/api/?name=${item.name.replace(' ', '+')}&background=c89e4c&color=0B1121`
+        image: undefined
     }));
 
     return (
@@ -53,7 +53,13 @@ export default function Testimonials() {
                             </p>
 
                             <div className="flex items-center gap-4">
-                                <Image src={review.image} alt={review.name} width={48} height={48} className="w-12 h-12 rounded-full border border-gold/20" />
+                                {review.image ? (
+                                    <Image src={review.image} alt={review.name} width={48} height={48} className="w-12 h-12 rounded-full border border-gold/20 object-cover" />
+                                ) : (
+                                    <div className="w-12 h-12 rounded-full border border-gold/20 bg-white/5 flex items-center justify-center text-2xl">
+                                        👤
+                                    </div>
+                                )}
                                 <div>
                                     <h4 className="text-white font-bold text-sm">{review.name}</h4>
                                     <p className="text-gold text-xs">{review.role}</p>

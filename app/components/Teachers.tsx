@@ -62,9 +62,17 @@ export default function Teachers() {
                 </div>
 
                 {loading ? (
-                    <div className="text-center py-20 text-white">
-                        <div className="animate-spin w-12 h-12 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4"></div>
-                        <p>Loading Teachers...</p>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="bg-[#111827] rounded-3xl overflow-hidden border border-white/5 animate-pulse">
+                                <div className="h-64 bg-slate-800"></div>
+                                <div className="p-6 space-y-4">
+                                    <div className="h-6 bg-slate-700 rounded w-3/4"></div>
+                                    <div className="h-4 bg-slate-700 rounded w-1/2"></div>
+                                    <div className="h-20 bg-slate-700 rounded"></div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center" dir={language === 'ar' ? 'rtl' : 'ltr'}>

@@ -39,7 +39,6 @@ export default function ReviewsPage() {
         e.preventDefault();
         const reviewToAdd = {
             ...newReview,
-            image: newReview.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(newReview.name)}&background=c89e4c&color=0B1121`
         };
 
         try {
@@ -107,7 +106,13 @@ export default function ReviewsPage() {
                                 </p>
 
                                 <div className="flex items-center gap-4 pt-4 border-t border-white/5">
-                                    <Image src={review.image} alt={review.name} width={48} height={48} className="w-12 h-12 rounded-full border border-gold/20" />
+                                    {review.image && !review.image.includes('ui-avatars.com') ? (
+                                        <Image src={review.image} alt={review.name} width={48} height={48} className="w-12 h-12 rounded-full border border-gold/20 object-cover" />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full border border-gold/20 bg-white/5 flex items-center justify-center text-2xl">
+                                            👤
+                                        </div>
+                                    )}
                                     <div>
                                         <h4 className="text-white font-bold text-sm">{review.name}</h4>
                                         <p className="text-gold text-xs">{review.role}</p>
