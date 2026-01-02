@@ -6,12 +6,14 @@ const alexandria = Alexandria({
   variable: "--font-alexandria",
   subsets: ["arabic", "latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const lalezar = Lalezar({
   variable: "--font-lalezar",
   subsets: ["arabic", "latin"],
   weight: ["400"], // Lalezar only has 400
+  display: "swap",
 });
 
 export const metadata: Metadata = {

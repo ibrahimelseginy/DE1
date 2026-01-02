@@ -6,28 +6,40 @@ import { useLanguage } from '../context/LanguageContext';
 
 import Link from 'next/link';
 
-export default function Teachers() {
+export default function Teachers({ initialTeachers = [] }: { initialTeachers?: any[] }) {
     const { t, language } = useLanguage();
     const [currency, setCurrency] = React.useState<'EGP' | 'USD' | 'SAR' | 'KWD'>('EGP');
-    const [teachersList, setTeachersList] = React.useState<any[]>([]);
-    const [loading, setLoading] = React.useState(true);
+    const [teachersList, setTeachersList] = React.useState<any[]>(initialTeachers);
+    // Remove individual loading state if data is passed from parent,
+    // or keep it false initially if data is present.
+    // If we want instant load, we rely on initialTeachers.
+    const loading = teachersList.length === 0 && initialTeachers.length === 0;
 
+    // We can keep a simplified effect if we ever need to re-fetch on client, 
+    // but for now, we assume parent passes data.
     React.useEffect(() => {
-        const fetchTeachers = async () => {
-            try {
-                const res = await fetch('/api/teachers');
-                if (res.ok) {
-                    const data = await res.json();
-                    setTeachersList(data);
+        if (initialTeachers.length > 0) {
+            setTeachersList(initialTeachers);
+        }
+    }, [initialTeachers]);
+
+    // If we still want to fetch as fallback (only if no props passed):
+    React.useEffect(() => {
+        if (initialTeachers.length === 0) {
+            const fetchTeachers = async () => {
+                try {
+                    const res = await fetch('/api/teachers');
+                    if (res.ok) {
+                        const data = await res.json();
+                        setTeachersList(data);
+                    }
+                } catch (error) {
+                    console.error("Failed to load teachers", error);
                 }
-            } catch (error) {
-                console.error("Failed to load teachers", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchTeachers();
-    }, []);
+            };
+            fetchTeachers();
+        }
+    }, [initialTeachers]);
 
     const currencies = [
         { code: 'EGP', label: 'EGP 🇪🇬' },
