@@ -24,7 +24,12 @@ const saveTeachers = (teachers: any[]) => {
 
 // GET: List all teachers
 export async function GET() {
-    return NextResponse.json(getTeachers());
+    const teachers = getTeachers();
+    return NextResponse.json(teachers, {
+        headers: {
+            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
+        }
+    });
 }
 
 // POST: Add a new teacher

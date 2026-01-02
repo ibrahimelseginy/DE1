@@ -63,7 +63,11 @@ export async function GET() {
                 : []
         }));
 
-        return NextResponse.json(formattedBookings);
+        return NextResponse.json(formattedBookings, {
+            headers: {
+                'Cache-Control': 'private, max-age=60, stale-while-revalidate=120'
+            }
+        });
     } catch (error) {
         console.error('GET Error:', error);
         return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });

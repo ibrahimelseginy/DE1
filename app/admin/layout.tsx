@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, PlusCircle, LogOut } from 'lucide-react';
+import SWRProvider from './SWRProvider';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -31,8 +32,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
-                                        ? 'bg-gold text-midnight font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    ? 'bg-gold text-midnight font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                     }`}
                             >
                                 <Icon size={20} />
@@ -52,9 +53,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Main Content */}
             <main className="flex-grow p-6 overflow-y-auto">
-                <div className="max-w-6xl mx-auto">
-                    {children}
-                </div>
+                <SWRProvider>
+                    <div className="max-w-6xl mx-auto">
+                        {children}
+                    </div>
+                </SWRProvider>
             </main>
         </div>
     );
