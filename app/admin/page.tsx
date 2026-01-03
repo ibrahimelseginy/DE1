@@ -380,7 +380,14 @@ export default function AdminDashboard() {
             });
 
             if (res.ok) {
-                mutate('/api/bookings');
+                const createdBooking = await res.json();
+
+                // Optimistic update: Add the new booking to the list immediately
+                mutate('/api/bookings', (currentBookings: any) => {
+                    const bookingsArray = Array.isArray(currentBookings) ? currentBookings : [];
+                    return [createdBooking, ...bookingsArray];
+                }, false); // false means "don't revalidate immediately"
+
                 setShowNewBookingModal(false);
                 setNewBooking({
                     name: '',
