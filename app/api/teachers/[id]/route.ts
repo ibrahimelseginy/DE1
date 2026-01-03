@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
 import fs from 'fs';
 import path from 'path';
 
@@ -34,6 +33,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         }
 
         // In production, try DB first
+        const { default: prisma } = await import('@/lib/prisma');
         const dbTeacher = await prisma.teacher.findUnique({
             where: { id: idStr }
         });
@@ -86,6 +86,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
 
         // In production, save/Update in DB
+        const { default: prisma } = await import('@/lib/prisma');
         await prisma.teacher.upsert({
             where: { id: idStr },
             update: { data: JSON.stringify(body) },
@@ -121,6 +122,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         }
 
         // Delete from DB (Production)
+        const { default: prisma } = await import('@/lib/prisma');
         await prisma.teacher.delete({
             where: { id: idStr }
         }).catch(() => { }); // Ignore if not found in DB
