@@ -1,6 +1,8 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
+import { Facebook, Smartphone, ArrowLeft, Twitter, Youtube } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { usePathname } from 'next/navigation';
 
 export default function Footer() {
