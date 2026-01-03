@@ -1,30 +1,33 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
-import { Facebook, Smartphone, ArrowLeft, Twitter, Youtube } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
     const { t, language } = useLanguage();
+    const pathname = usePathname();
     const isRTL = language === 'ar';
+    const showCTA = !pathname?.startsWith('/teachers');
 
     return (
         <footer className="bg-midnight border-t border-white/5 pt-0">
 
-            {/* CTA Section */}
-            <div className="relative py-20 bg-black/30 overflow-hidden">
-                <div className="absolute inset-0 bg-gold/5 blur-3xl rounded-full scale-150 opacity-20"></div>
-                <div className="container mx-auto px-4 text-center relative z-10">
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">{t.footer.ctaTitle}</h2>
-                    <p className="text-xl text-gray-400 mb-10 font-light">
-                        {t.footer.ctaSubtitle}
-                    </p>
-                    <a href="/teachers" className="px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] inline-flex items-center justify-center gap-3 mx-auto">
-                        {t.footer.ctaButton}
-                        <ArrowLeft className={`w-3 h-3 relative top-[1px] ${!isRTL ? 'rotate-180' : ''}`} />
-                    </a>
+            {/* CTA Section - Show only if NOT on teachers pages */}
+            {showCTA && (
+                <div className="relative py-20 bg-black/30 overflow-hidden">
+                    <div className="absolute inset-0 bg-gold/5 blur-3xl rounded-full scale-150 opacity-20"></div>
+                    <div className="container mx-auto px-4 text-center relative z-10">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">{t.footer.ctaTitle}</h2>
+                        <p className="text-xl text-gray-400 mb-10 font-light">
+                            {t.footer.ctaSubtitle}
+                        </p>
+                        <a href="/teachers" className="px-8 py-4 bg-gold hover:bg-gold-shiny text-midnight font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(235,201,123,0.25)] inline-flex items-center justify-center gap-3 mx-auto">
+                            {t.footer.ctaButton}
+                            <ArrowLeft className={`w-3 h-3 relative top-[1px] ${!isRTL ? 'rotate-180' : ''}`} />
+                        </a>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Footer Links */}
             <div className="container mx-auto px-4 py-16">

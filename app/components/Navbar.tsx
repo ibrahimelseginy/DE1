@@ -36,17 +36,8 @@ export default function Navbar() {
         <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-midnight/90 backdrop-blur-md py-4 shadow-lg border-b border-white/5' : 'bg-transparent py-6'}`}>
             <div className="container mx-auto px-4 flex items-center justify-between">
                 {/* Logo */}
-                {/* Logo */}
-                <Link href="/" className="flex items-center group">
-                    <div className="relative w-40 h-16 md:w-48 md:h-20 transition-transform group-hover:scale-105 duration-300">
-                        <Image
-                            src="/de1-logo.png"
-                            alt="DE1 Academy"
-                            fill
-                            className="object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                            priority
-                        />
-                    </div>
+                <Link href="/" className="text-2xl md:text-3xl font-bold text-gold tracking-tight hover:text-white transition-colors" style={{ fontFamily: 'var(--font-lalezar)' }}>
+                    DE1 Academy
                 </Link>
 
                 {/* Desktop Links */}
