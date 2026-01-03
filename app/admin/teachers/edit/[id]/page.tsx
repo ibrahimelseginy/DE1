@@ -91,8 +91,8 @@ export default function EditTeacherPage() {
 
         // Optimistic update - تحديث فوري للـ cache
         mutate(`/api/teachers/${id}`, formData, false);
-        mutate('/api/teachers', (teachers: any[]) =>
-            teachers?.map(t => t.id === id ? formData : t), false
+        mutate('/api/teachers', (teachers: any[] | undefined) =>
+            teachers ? teachers.map(t => t.id === id ? formData : t) : [], false
         );
 
         try {

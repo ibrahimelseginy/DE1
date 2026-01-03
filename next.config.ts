@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
   // Reduce build time
   productionBrowserSourceMaps: false,
   // Enable SWC minification for faster builds
-  swcMinify: true,
+  // swcMinify: true, // Deprecated in Next.js 15+ (Enabled by default)
 };
 
 export default nextConfig;
