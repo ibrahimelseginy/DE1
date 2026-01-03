@@ -150,10 +150,13 @@ export default function BookingClient({ teacher }: { teacher: any }) {
         const bookingData = {
             teacherId: teacher.id,
             teacher: teacherNameForBooking,
+            teacherName: teacherNameForBooking, // Explicitly send teacherName for clarity
             ...formData,
             submittedAt: new Date().toISOString(),
             status: 'قيد الانتظار' // Pending
         };
+
+        console.log('Sending booking data:', bookingData); // Debug log
 
         try {
             // 1. Try to save to Database (API)

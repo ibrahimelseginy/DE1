@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { mutate } from 'swr'; // Import mutate
 import { useRouter } from 'next/navigation';
 import { Save, ArrowRight, Video, Star, Clock, Award } from 'lucide-react';
 
@@ -74,7 +75,14 @@ export default function NewTeacherPage() {
             });
 
             if (res.ok) {
-                alert("تم إضافة المعلم بنجاح!");
+                const newTeacher = await res.json();
+
+                // 🚀 Optimistic Update: Add to global cache immediately
+                await mutate('/api/teachers', (currentTeachers: any[] = []) => {
+                    return [newTeacher, ...currentTeachers];
+                }, false);
+
+                alert("تم إضافة المعلم بنجاح! 🚀");
                 router.push('/admin/teachers');
             } else {
                 alert("حدث خطأ أثناء الإضافة.");

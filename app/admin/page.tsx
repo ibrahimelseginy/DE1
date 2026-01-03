@@ -4,9 +4,19 @@ import useSWR, { mutate } from 'swr';
 import { Users, BookOpen, Clock, TrendingUp, Calendar, Check, X, Printer, Download, Plus, Eye } from 'lucide-react';
 
 export default function AdminDashboard() {
-    // Use SWR for automatic caching and revalidation
-    const { data: bookingsRaw = [], error: bookingsError } = useSWR('/api/bookings');
-    const { data: teachersRaw = [], error: teachersError } = useSWR('/api/teachers');
+    // Optimized SWR for "Blazing Fast" Speed 🚀
+    const swrConfig = {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: true,
+        dedupingInterval: 60000, // Cache 1 min
+        keepPreviousData: true
+    };
+
+    // Explicit fetcher to ensure consistency
+    const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+    const { data: bookingsRaw = [], error: bookingsError } = useSWR('/api/bookings', fetcher, swrConfig);
+    const { data: teachersRaw = [], error: teachersError } = useSWR('/api/teachers', fetcher, swrConfig);
 
     // Local state to hold bookings + new ones (to prevent disappearing on SWR revalidate)
     const [localBookings, setLocalBookings] = React.useState<any[]>([]);

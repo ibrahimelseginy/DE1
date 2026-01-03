@@ -6,7 +6,15 @@ import Toast from '@/app/components/Toast';
 import { Edit, Trash2, Star, Eye, Plus } from 'lucide-react';
 
 export default function AdminTeachersPage() {
-    const { data: teachers = [], error } = useSWR<any[]>('/api/teachers');
+    // Speed Config 🚀
+    const swrConfig = {
+        revalidateOnFocus: false,
+        dedupingInterval: 60000,
+        keepPreviousData: true
+    };
+    const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+    const { data: teachers = [], error } = useSWR<any[]>('/api/teachers', fetcher, swrConfig);
     const [searchTerm, setSearchTerm] = useState('');
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
