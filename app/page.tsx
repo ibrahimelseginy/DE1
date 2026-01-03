@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Journey from "./components/Journey";
@@ -8,20 +8,13 @@ import Teachers from "./components/Teachers";
 import Footer from "./components/Footer";
 
 // Lazy load components below the fold
-const Testimonials = dynamic(() => import("./components/Testimonials"), {
+const Testimonials = dynamicImport(() => import("./components/Testimonials"), {
   loading: () => <div className="min-h-[400px]" />,
 });
-const FloatingSocials = dynamic(() => import("./components/FloatingSocials"));
+const FloatingSocials = dynamicImport(() => import("./components/FloatingSocials"));
 
 import fs from 'fs';
 import path from 'path';
-
-// Only import Prisma in production
-let prisma: any = null;
-if (process.env.NODE_ENV === 'production') {
-  const prismaModule = await import('@/lib/prisma');
-  prisma = prismaModule.default;
-}
 
 // Helper to get from JSON (Legacy fallback)
 const getTeachersLegacy = () => {
@@ -43,6 +36,7 @@ async function getTeachers() {
 
   // In production, use Prisma with fallback
   try {
+    const { default: prisma } = await import('@/lib/prisma');
     const dbTeachers = await prisma.teacher.findMany();
     if (dbTeachers.length > 0) {
       return dbTeachers.map((t: any) => JSON.parse(t.data));
@@ -53,8 +47,8 @@ async function getTeachers() {
   return getTeachersLegacy();
 }
 
-// Enable ISR only in production
-export const revalidate = process.env.NODE_ENV === 'production' ? 300 : false;
+// Ensure fresh data
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const teachers = await getTeachers();
