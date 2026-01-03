@@ -3,13 +3,6 @@ import BookingClient from './BookingClient';
 import fs from 'fs';
 import path from 'path';
 
-// Only import Prisma in production
-let prisma: any = null;
-if (process.env.NODE_ENV === 'production') {
-    const prismaModule = await import('@/lib/prisma');
-    prisma = prismaModule.default;
-}
-
 // Helper to get from JSON (Legacy fallback)
 const getTeachersLegacy = () => {
     const dataFilePath = path.join(process.cwd(), 'app', 'data', 'teachers.json');
@@ -31,6 +24,7 @@ async function getTeacher(id: string) {
 
     // In production, try DB first
     try {
+        const { default: prisma } = await import('@/lib/prisma');
         const dbTeacher = await prisma.teacher.findUnique({
             where: { id }
         });
@@ -47,8 +41,8 @@ async function getTeacher(id: string) {
     return teachers.find((t: any) => String(t.id) === id);
 }
 
-// Enable ISR only in production
-export const revalidate = process.env.NODE_ENV === 'production' ? 300 : false;
+// Ensure fresh data
+export const dynamic = "force-dynamic";
 
 export default async function TeacherDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
