@@ -25,7 +25,7 @@ export default function Hero() {
                     </div>
 
                     {/* العنوان - خطوط أكبر وأوضح */}
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-lalezar mb-10 leading-tight tracking-wider">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-lalezar mb-10 leading-tight">
                         <span className="text-white block mb-3 font-extrabold drop-shadow-lg">{t.hero.titlePart1}</span>
                         <span className="relative inline-block">
                             <span className="text-[#FFD700] font-extrabold block drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] pb-3 text-5xl md:text-7xl lg:text-8xl relative z-10 leading-normal">

@@ -90,7 +90,7 @@ export default function Teachers({ initialTeachers = [] }: { initialTeachers?: a
                                     className="bg-[#111827] rounded-3xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all duration-300 group shadow-lg flex flex-col"
                                 >
                                     {/* Image Area */}
-                                    <div className="relative h-64 bg-slate-800 flex items-center justify-center overflow-hidden">
+                                    <div className="relative h-80 bg-slate-800 flex items-center justify-center overflow-hidden">
                                         <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent z-10"></div>
                                         {/* Next.js Optimized Image */}
                                         <div className="absolute inset-0 w-full h-full">
