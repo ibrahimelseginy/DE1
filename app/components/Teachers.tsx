@@ -98,7 +98,7 @@ export default function Teachers({ initialTeachers = [] }: { initialTeachers?: a
                                                 src={teacher.image || '/placeholder-teacher.jpg'}
                                                 alt={getContent(teacher.name)}
                                                 fill
-                                                className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform"
+                                                className="object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 priority={idx < 3}
                                                 quality={85}

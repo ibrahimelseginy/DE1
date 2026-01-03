@@ -27,7 +27,15 @@ export default function Hero() {
                     {/* العنوان - خطوط أكبر وأوضح */}
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-lalezar mb-10 leading-tight tracking-wider">
                         <span className="text-white block mb-3 font-extrabold drop-shadow-lg">{t.hero.titlePart1}</span>
-                        <span className="text-[#FFD700] font-extrabold block drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] pb-3 text-5xl md:text-7xl lg:text-8xl">{t.hero.titlePart2}</span>
+                        <span className="relative inline-block">
+                            <span className="text-[#FFD700] font-extrabold block drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] pb-3 text-5xl md:text-7xl lg:text-8xl relative z-10 leading-normal">
+                                {t.hero.titlePart2}
+                            </span>
+                            <svg className="absolute bottom-0 md:-bottom-2 left-0 w-full h-4 md:h-6 text-[#FFD700] z-0 opacity-80" viewBox="0 0 300 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 19C52.3488 6.70327 124.773 -2.71617 297 3" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M3 19C52.3488 6.70327 124.773 -2.71617 297 3" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.2" />
+                            </svg>
+                        </span>
                         <span className="text-white block mt-3 text-2xl md:text-4xl lg:text-5xl font-sans font-bold">{t.hero.titlePart3}</span>
                     </h1>
 
