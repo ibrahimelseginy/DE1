@@ -5,8 +5,11 @@ import { Users, BookOpen, Clock, TrendingUp, Calendar, Check, X, Printer, Downlo
 
 export default function AdminDashboard() {
     // Use SWR for automatic caching and revalidation
-    const { data: bookings = [], error: bookingsError } = useSWR('/api/bookings');
-    const { data: teachers = [], error: teachersError } = useSWR('/api/teachers');
+    const { data: bookingsRaw = [], error: bookingsError } = useSWR('/api/bookings');
+    const { data: teachersRaw = [], error: teachersError } = useSWR('/api/teachers');
+
+    const bookings = Array.isArray(bookingsRaw) ? bookingsRaw : [];
+    const teachers = Array.isArray(teachersRaw) ? teachersRaw : [];
 
     const teacherCount = teachers.length;
     const bookingStats = React.useMemo(() => ({
@@ -14,6 +17,12 @@ export default function AdminDashboard() {
         pending: bookings.filter((b: any) => b.status === 'قيد الانتظار').length,
         cancelled: bookings.filter((b: any) => b.status === 'ملغي').length
     }), [bookings]);
+
+    // Hydration fix for date
+    const [currentDate, setCurrentDate] = React.useState('');
+    React.useEffect(() => {
+        setCurrentDate(new Date().toLocaleDateString('en-US'));
+    }, []);
 
     const stats = [
         { label: 'عدد المعلمين', value: teacherCount.toString(), icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10' },
@@ -400,7 +409,7 @@ export default function AdminDashboard() {
                     <p className="text-gray-400">نظرة عامة على أداء الأكاديمية</p>
                 </div>
                 <div className="text-left" dir="ltr">
-                    <p className="text-white font-mono text-sm">{new Date().toLocaleDateString('en-US')}</p>
+                    <p className="text-white font-mono text-sm">{currentDate}</p>
                 </div>
             </header>
 
