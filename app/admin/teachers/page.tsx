@@ -5,16 +5,17 @@ import Link from 'next/link';
 import Toast from '@/app/components/Toast';
 import { Edit, Trash2, Star, Eye, Plus } from 'lucide-react';
 
-export default function AdminTeachersPage() {
-    // Speed Config 🚀
-    const swrConfig = {
-        revalidateOnFocus: false,
-        dedupingInterval: 60000,
-        keepPreviousData: true
-    };
-    const fetcher = (url: string) => fetch(url).then(res => res.json());
+// Speed Config 🚀
+const swrConfig = {
+    revalidateOnFocus: true,
+    dedupingInterval: 0,
+    keepPreviousData: true
+};
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-    const { data: teachers = [], error } = useSWR<any[]>('/api/teachers', fetcher, swrConfig);
+export default function AdminTeachersPage() {
+    const { data: teachersRaw, error } = useSWR<any[]>('/api/teachers', fetcher, swrConfig);
+    const teachers = Array.isArray(teachersRaw) ? teachersRaw : [];
     const [searchTerm, setSearchTerm] = useState('');
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);

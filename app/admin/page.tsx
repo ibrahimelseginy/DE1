@@ -3,62 +3,40 @@ import React, { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
 import { Users, BookOpen, Clock, TrendingUp, Calendar, Check, X, Printer, Download, Plus, Eye } from 'lucide-react';
 
+// Stabilized SWR Configuration & Fetcher (Persistent references prevent loops)
+const swrConfig = {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    dedupingInterval: 0,
+    keepPreviousData: true
+};
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 export default function AdminDashboard() {
-    // Optimized SWR for "Blazing Fast" Speed 🚀
-    const swrConfig = {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: true,
-        dedupingInterval: 60000, // Cache 1 min
-        keepPreviousData: true
-    };
+    const { data: bookingsRaw, error: bookingsError } = useSWR('/api/bookings', fetcher, swrConfig);
+    const { data: teachersRaw, error: teachersError } = useSWR('/api/teachers', fetcher, swrConfig);
 
-    // Explicit fetcher to ensure consistency
-    const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-    const { data: bookingsRaw = [], error: bookingsError } = useSWR('/api/bookings', fetcher, swrConfig);
-    const { data: teachersRaw = [], error: teachersError } = useSWR('/api/teachers', fetcher, swrConfig);
-
-    // Local state to hold bookings + new ones (to prevent disappearing on SWR revalidate)
-    const [localBookings, setLocalBookings] = React.useState<any[]>([]);
-
-    // Sync local state with SWR data initially, but preserve our local additions
-    React.useEffect(() => {
-        if (Array.isArray(bookingsRaw)) {
-            setLocalBookings(prev => {
-                // Return SWR data if we haven't added anything locally yet, OR merge carefully
-                // For this specific issue where SWR overwrites our manual add, we prioritize local additions if they exist in a "modified" way
-                // But simple way: Just rely on SWR unless we explicitly added something? 
-                // Better approach: Just set it initially, and when we add, we prepend to THIS state.
-                // However, if SWR refetches, we want to respect it UNLESS it wipes our temp data.
-                // Since this is a specialized case for "Demo on Vercel", let's trust SWR but KEEP locally added items.
-
-                // Strategy: Only update from SWR if the count is different and we haven't just added one? 
-                // Or: Keep a separate list of "optimistic" bookings and display merged list.
-                return bookingsRaw; // Reset to server state normally
-            });
-        }
-    }, [bookingsRaw]);
-
-    // Better strategy for "Demo":
-    // 1. Maintain `displayBookings` which is `optimisticBookings` + `serverBookings`
+    // Maintain optimisticBookings for instant UI response
     const [optimisticBookings, setOptimisticBookings] = React.useState<any[]>([]);
 
-    // Combine server data + optimistic data
+    // Combine server data + optimistic data (stable memo)
     const bookings = React.useMemo(() => {
         const serverData = Array.isArray(bookingsRaw) ? bookingsRaw : [];
-        // Filter out any server items that might duplicate optimistic (by ID)
-        return [...optimisticBookings, ...serverData];
+        const optimisticIds = new Set(optimisticBookings.map(b => b.id));
+        const filteredServerData = serverData.filter(b => !optimisticIds.has(b.id));
+
+        return [...optimisticBookings, ...filteredServerData];
     }, [bookingsRaw, optimisticBookings]);
 
-    const teachers = Array.isArray(teachersRaw) ? teachersRaw : [];
-
+    const teachers = React.useMemo(() => Array.isArray(teachersRaw) ? teachersRaw : [], [teachersRaw]);
     const [selectedBooking, setSelectedBooking] = React.useState<any>(null);
 
     const teacherCount = teachers.length;
     const bookingStats = React.useMemo(() => ({
-        confirmed: bookings.filter((b: any) => b.status === 'مؤكد').length,
-        pending: bookings.filter((b: any) => b.status === 'قيد الانتظار').length,
-        cancelled: bookings.filter((b: any) => b.status === 'ملغي').length
+        confirmed: bookings.filter((b: any) => b.status === 'مؤكد' || b.status === 'confirmed').length,
+        pending: bookings.filter((b: any) => b.status === 'قيد الانتظار' || b.status === 'pending').length,
+        cancelled: bookings.filter((b: any) => b.status === 'ملغي' || b.status === 'cancelled').length
     }), [bookings]);
 
     // Hydration fix for date
@@ -88,20 +66,27 @@ export default function AdminDashboard() {
 
 
     // Handler for confirming booking
-    const handleConfirmBooking = useCallback(async (bookingId: number) => {
+    const handleConfirmBooking = useCallback(async (bookingId: any) => {
         const deposit = prompt('أدخل قيمة الديبوزت (جنيه):');
         if (!deposit) return;
 
-        // Optimistic update
-        const updatedBookings = bookings.map((b: any) =>
-            b.id === bookingId
-                ? { ...b, status: 'مؤكد', deposit: parseFloat(deposit) }
-                : b
-        );
-        mutate('/api/bookings', updatedBookings, false);
+        const targetBooking = bookings.find((b: any) => b.id === bookingId);
+        if (!targetBooking) return;
+
+        const updatedBooking = { ...targetBooking, status: 'مؤكد', deposit: parseFloat(deposit) };
+
+        // 1. Force Local Update (This makes it instant and persistent in current session)
+        setOptimisticBookings(prev => {
+            const exists = prev.some(b => b.id === bookingId);
+            if (exists) return prev.map(b => b.id === bookingId ? updatedBooking : b);
+            return [updatedBooking, ...prev];
+        });
+
+        // 2. Global SWR Update
+        mutate('/api/bookings');
 
         try {
-            const res = await fetch(`/api/bookings/${bookingId}`, {
+            await fetch(`/api/bookings/${bookingId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -109,35 +94,33 @@ export default function AdminDashboard() {
                     deposit: parseFloat(deposit)
                 })
             });
-
-            if (res.ok) {
-                mutate('/api/bookings');
-                alert('✅ تم تأكيد الحجز بنجاح!');
-            } else {
-                mutate('/api/bookings');
-                alert('❌ فشل التأكيد');
-            }
         } catch (error) {
-            mutate('/api/bookings');
-            alert('❌ حدث خطأ');
+            console.error('Update failed:', error);
         }
     }, [bookings]);
 
     // Handler for rejecting booking
-    const handleRejectBooking = useCallback(async (bookingId: number) => {
+    const handleRejectBooking = useCallback(async (bookingId: any) => {
         const reason = prompt('سبب الرفض:');
         if (!reason) return;
 
-        // Optimistic update
-        const updatedBookings = bookings.map((b: any) =>
-            b.id === bookingId
-                ? { ...b, status: 'ملغي', cancellationReason: reason }
-                : b
-        );
-        mutate('/api/bookings', updatedBookings, false);
+        const targetBooking = bookings.find((b: any) => b.id === bookingId);
+        if (!targetBooking) return;
+
+        const updatedBooking = { ...targetBooking, status: 'ملغي', cancellationReason: reason };
+
+        // 1. Force Local Update
+        setOptimisticBookings(prev => {
+            const exists = prev.some(b => b.id === bookingId);
+            if (exists) return prev.map(b => b.id === bookingId ? updatedBooking : b);
+            return [updatedBooking, ...prev];
+        });
+
+        // 2. Global SWR Update
+        mutate('/api/bookings');
 
         try {
-            const res = await fetch(`/api/bookings/${bookingId}`, {
+            await fetch(`/api/bookings/${bookingId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -145,17 +128,8 @@ export default function AdminDashboard() {
                     cancellationReason: reason
                 })
             });
-
-            if (res.ok) {
-                mutate('/api/bookings');
-                alert('✅ تم رفض الحجز');
-            } else {
-                mutate('/api/bookings');
-                alert('❌ فشل الرفض');
-            }
         } catch (error) {
-            mutate('/api/bookings');
-            alert('❌ حدث خطأ');
+            console.error('Update failed:', error);
         }
     }, [bookings]);
 
@@ -568,8 +542,12 @@ export default function AdminDashboard() {
                                             <div className="text-xs text-gray-500">{booking.phone}</div>
                                         </td>
                                         <td className="py-4 text-gray-300">{booking.teacherName || booking.teacher || 'غير محدد'}</td>
-                                        <td className="py-4 text-gray-300">{new Date(booking.submittedAt).toLocaleDateString()}</td>
-                                        <td className="py-4 text-gray-300">{new Date(booking.submittedAt).toLocaleTimeString()}</td>
+                                        <td className="py-4 text-gray-300">
+                                            {booking.submittedAt ? new Date(booking.submittedAt).toLocaleDateString() : '-'}
+                                        </td>
+                                        <td className="py-4 text-gray-300">
+                                            {booking.submittedAt ? new Date(booking.submittedAt).toLocaleTimeString() : '-'}
+                                        </td>
                                         <td className="py-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === 'مؤكد'
                                                 ? 'bg-green-500/10 text-green-400 border border-green-500/20'

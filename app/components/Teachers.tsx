@@ -14,12 +14,12 @@ export default function Teachers({ initialTeachers = [] }: { initialTeachers?: a
     // Fetcher function for SWR
     const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-    // Use SWR for automatic revalidation and cache sync
-    const { data: teachersList, isLoading } = useSWR('/api/teachers', fetcher, {
+    // Use SWR for automatic revalidation and cache sync - Simplified for Speed 🚀
+    const { data: teachersList, isLoading, mutate: revalidateTeachers } = useSWR('/api/teachers', fetcher, {
         fallbackData: initialTeachers,
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
-        refreshInterval: 0,
+        dedupingInterval: 0, // NO DEDUPLICATION - Get fresh data on every component mount
     });
 
     const loading = isLoading && (!teachersList || teachersList.length === 0);

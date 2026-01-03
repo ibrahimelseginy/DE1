@@ -8,18 +8,27 @@ import { Save, ArrowRight, Video, Star, Clock, Award } from 'lucide-react';
 export default function EditTeacherPage() {
     const params = useParams();
     const router = useRouter();
-    const id = Number(params.id);
-
-    const { data: teacher, error, isLoading } = useSWR(`/api/teachers/${id}`);
+    const idStr = params.id as string;
+    const { data: teacher, error, isLoading } = useSWR(`/api/teachers/${idStr}`);
     const [formData, setFormData] = useState<any>(null);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     useEffect(() => {
         if (teacher) {
+            // Safe mapping to ensure no crashes
             setFormData({
-                ...teacher,
+                id: teacher.id,
+                name: teacher.name || { ar: '', en: '', de: '' },
+                role: teacher.role || { ar: '', en: '', de: '' },
+                bio: teacher.bio || { ar: '', en: '', de: '' },
+                image: teacher.image || '',
                 videoUrl: teacher.videoUrl || '',
+                stats: teacher.stats || {
+                    stars: 5.0,
+                    sessions: '0',
+                    exp: { ar: '', en: '', de: '' }
+                },
                 pricing: teacher.pricing || {
                     duration: 70,
                     currency: 'EGP',
@@ -89,34 +98,32 @@ export default function EditTeacherPage() {
         e.preventDefault();
         setSaving(true);
 
-        // Optimistic update - تحديث فوري للـ cache
-        mutate(`/api/teachers/${id}`, formData, false);
+        // Optimistic update
+        mutate(`/api/teachers/${idStr}`, formData, false);
         mutate('/api/teachers', (teachers: any[] | undefined) =>
-            teachers ? teachers.map(t => t.id === id ? formData : t) : [], false
+            teachers ? teachers.map(t => String(t.id) === idStr ? formData : t) : [], false
         );
 
         try {
-            const res = await fetch(`/api/teachers/${id}`, {
+            const res = await fetch(`/api/teachers/${idStr}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
             if (res.ok) {
-                // نأكد التحديث
-                mutate(`/api/teachers/${id}`);
+                // Confirm update
+                mutate(`/api/teachers/${idStr}`);
                 mutate('/api/teachers');
                 setToast({ message: 'تم حفظ البيانات بنجاح! ✅', type: 'success' });
                 setTimeout(() => router.push('/admin/teachers'), 1500);
             } else {
-                // فشل الحفظ - نرجع للبيانات القديمة
-                mutate(`/api/teachers/${id}`);
+                mutate(`/api/teachers/${idStr}`);
                 mutate('/api/teachers');
                 setToast({ message: 'حدث خطأ أثناء الحفظ.', type: 'error' });
             }
         } catch (error) {
-            // خطأ - نرجع للبيانات القديمة
-            mutate(`/api/teachers/${id}`);
+            mutate(`/api/teachers/${idStr}`);
             mutate('/api/teachers');
             console.error(error);
             setToast({ message: 'حدث خطأ في الاتصال.', type: 'error' });
