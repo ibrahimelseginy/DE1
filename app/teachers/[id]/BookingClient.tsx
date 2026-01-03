@@ -6,6 +6,66 @@ import FloatingSocials from "../../components/FloatingSocials";
 import { Star, Clock, Award, CheckCircle, User, Phone, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import Image from 'next/image';
+import { Play } from 'lucide-react';
+
+const VideoPlayer = ({ url }: { url: string }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    if (!url) return null;
+
+    // Extract video ID
+    let videoId = '';
+    if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1];
+    } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1];
+    }
+    const ampersandPosition = videoId.indexOf('&');
+    if (ampersandPosition !== -1) {
+        videoId = videoId.substring(0, ampersandPosition);
+    }
+
+    if (!videoId) return (
+        <div className="w-full h-full flex items-center justify-center bg-black/50 text-gray-400 aspect-video rounded-2xl border border-white/10">
+            (Video Unavailable)
+        </div>
+    );
+
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+    return (
+        <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg bg-black group">
+            {!isPlaying ? (
+                <button
+                    onClick={() => setIsPlaying(true)}
+                    className="absolute inset-0 w-full h-full flex items-center justify-center group"
+                    aria-label="Play Video"
+                >
+                    <Image
+                        src={thumbnailUrl}
+                        alt="Video Thumbnail"
+                        fill
+                        className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                    <div className="w-16 h-16 bg-gold/90 rounded-full flex items-center justify-center text-midnight shadow-xl transform group-hover:scale-110 transition-all duration-300 z-10 backdrop-blur-sm">
+                        <Play className="w-8 h-8 fill-current ml-1" />
+                    </div>
+                </button>
+            ) : (
+                <iframe
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                    className="w-full h-full"
+                    title="Teacher Video"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                ></iframe>
+            )}
+        </div>
+    );
+};
 
 export default function BookingClient({ teacher }: { teacher: any }) {
     const { t, dir, language } = useLanguage();
@@ -159,10 +219,16 @@ export default function BookingClient({ teacher }: { teacher: any }) {
                     >
                         <div className="bg-[#111827] rounded-3xl p-8 border border-white/5 shadow-2xl">
                             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-start">
-                                {/* Image Placeholder */}
-                                <div className="w-32 h-32 rounded-full bg-slate-800 border-2 border-gold flex items-center justify-center text-gray-500 shrink-0 overflow-hidden relative">
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-midnight to-transparent opacity-50"></div>
-                                    <img src={teacher.image} alt={getContent(teacher.name)} className="w-full h-full object-cover" />
+                                {/* Optimized Image Placeholder */}
+                                <div className="w-32 h-32 rounded-full border-2 border-gold flex items-center justify-center text-gray-500 shrink-0 overflow-hidden relative bg-slate-800">
+                                    <Image
+                                        src={teacher.image || '/placeholder-teacher.jpg'}
+                                        alt={getContent(teacher.name)}
+                                        fill
+                                        className="object-cover"
+                                        sizes="128px"
+                                        priority
+                                    />
                                 </div>
                                 <div className="flex-grow">
                                     <h1 className="text-3xl font-extrabold text-white mb-2">{getContent(teacher.name)}</h1>
@@ -194,21 +260,7 @@ export default function BookingClient({ teacher }: { teacher: any }) {
                                 {teacher.videoUrl && (
                                     <div className="mt-8">
                                         <h3 className="text-2xl font-bold text-white mb-4">{t.teachers.video}</h3>
-                                        <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-lg">
-                                            {teacher.videoUrl.includes('youtube') || teacher.videoUrl.includes('youtu.be') ? (
-                                                <iframe
-                                                    src={teacher.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
-                                                    className="w-full h-full"
-                                                    title="Teacher Video"
-                                                    allowFullScreen
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                ></iframe>
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-black/50 text-gray-400">
-                                                    (Video Player Placeholder)
-                                                </div>
-                                            )}
-                                        </div>
+                                        <VideoPlayer url={teacher.videoUrl} />
                                     </div>
                                 )}
                             </div>
@@ -259,6 +311,7 @@ export default function BookingClient({ teacher }: { teacher: any }) {
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                 className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600`}
                                                 placeholder={t.booking.namePlaceholder}
+                                                suppressHydrationWarning
                                             />
                                         </div>
                                     </div>
@@ -275,6 +328,7 @@ export default function BookingClient({ teacher }: { teacher: any }) {
                                                 className={`w-full bg-black/20 border border-white/10 rounded-xl py-3 ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-white font-bold focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all placeholder:text-gray-600 font-sans`}
                                                 placeholder={t.booking.phonePlaceholder}
                                                 style={{ direction: 'ltr', textAlign: dir === 'rtl' ? 'right' : 'left' }}
+                                                suppressHydrationWarning
                                             />
                                         </div>
                                     </div>

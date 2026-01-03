@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Calendar, User, Phone, Target, Clock, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
+import Toast from '@/app/components/Toast';
 
 interface Booking {
     id: number;
@@ -22,6 +23,8 @@ export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
+    const [updatingId, setUpdatingId] = useState<number | null>(null);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     useEffect(() => {
         fetchBookings();
@@ -44,6 +47,23 @@ export default function BookingsPage() {
     };
 
     const updateStatus = async (id: number, newStatus: string) => {
+        // Optimistic update - تحديث فوري للـ UI
+        setUpdatingId(id);
+        const previousBookings = [...bookings];
+
+        // تحديث الـ UI فوراً
+        setBookings(prevBookings =>
+            prevBookings.map(booking =>
+                booking.id === id ? { ...booking, status: newStatus } : booking
+            )
+        );
+
+        // إظهار الإشعار فوراً قبل انتظار الـ API
+        setToast({
+            message: newStatus === 'مؤكد' ? 'تم تأكيد الحجز بنجاح! ✅' : 'تم إلغاء الحجز ❌',
+            type: 'success'
+        });
+
         try {
             const res = await fetch(`/api/bookings/${id}`, {
                 method: 'PATCH',
@@ -51,11 +71,18 @@ export default function BookingsPage() {
                 body: JSON.stringify({ status: newStatus })
             });
 
-            if (res.ok) {
-                fetchBookings();
+            if (!res.ok) {
+                // لو فشل الطلب، نرجع للحالة السابقة ونغير الإشعار
+                setBookings(previousBookings);
+                setToast({ message: 'فشل تحديث الحالة. حاول مرة أخرى.', type: 'error' });
             }
         } catch (err) {
+            // لو حصل خطأ، نرجع للحالة السابقة ونغير الإشعار
+            setBookings(previousBookings);
             console.error(err);
+            setToast({ message: 'حدث خطأ. حاول مرة أخرى.', type: 'error' });
+        } finally {
+            setUpdatingId(null);
         }
     };
 
@@ -101,156 +128,169 @@ export default function BookingsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0F172A] text-white p-8">
-            <div className="max-w-7xl mx-auto">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-white mb-2">الحجوزات</h1>
-                    <p className="text-gray-400">إدارة جميع حجوزات الطلاب</p>
-                </div>
+        <>
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
+            <div className="min-h-screen bg-[#0F172A] text-white p-8">
+                <div className="max-w-7xl mx-auto">
+                    {/* Header */}
+                    <div className="mb-8">
+                        <h1 className="text-4xl font-bold text-white mb-2">الحجوزات</h1>
+                        <p className="text-gray-400">إدارة جميع حجوزات الطلاب</p>
+                    </div>
 
-                {/* Filters */}
-                <div className="flex gap-4 mb-6 flex-wrap">
-                    <button
-                        onClick={() => setFilter('all')}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'all'
+                    {/* Filters */}
+                    <div className="flex gap-4 mb-6 flex-wrap">
+                        <button
+                            onClick={() => setFilter('all')}
+                            className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'all'
                                 ? 'bg-gold text-midnight'
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                            }`}
-                    >
-                        الكل ({bookings.length})
-                    </button>
-                    <button
-                        onClick={() => setFilter('pending')}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'pending'
+                                }`}
+                        >
+                            الكل ({bookings.length})
+                        </button>
+                        <button
+                            onClick={() => setFilter('pending')}
+                            className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'pending'
                                 ? 'bg-yellow-500 text-midnight'
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                            }`}
-                    >
-                        قيد الانتظار ({bookings.filter(b => b.status === 'قيد الانتظار').length})
-                    </button>
-                    <button
-                        onClick={() => setFilter('confirmed')}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'confirmed'
+                                }`}
+                        >
+                            قيد الانتظار ({bookings.filter(b => b.status === 'قيد الانتظار').length})
+                        </button>
+                        <button
+                            onClick={() => setFilter('confirmed')}
+                            className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'confirmed'
                                 ? 'bg-green-500 text-midnight'
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                            }`}
-                    >
-                        مؤكد ({bookings.filter(b => b.status === 'مؤكد').length})
-                    </button>
-                    <button
-                        onClick={() => setFilter('cancelled')}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'cancelled'
+                                }`}
+                        >
+                            مؤكد ({bookings.filter(b => b.status === 'مؤكد').length})
+                        </button>
+                        <button
+                            onClick={() => setFilter('cancelled')}
+                            className={`px-6 py-2 rounded-xl font-bold transition-all ${filter === 'cancelled'
                                 ? 'bg-red-500 text-midnight'
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                            }`}
-                    >
-                        ملغي ({bookings.filter(b => b.status === 'ملغي').length})
-                    </button>
-                </div>
+                                }`}
+                        >
+                            ملغي ({bookings.filter(b => b.status === 'ملغي').length})
+                        </button>
+                    </div>
 
-                {/* Bookings Grid */}
-                <div className="grid gap-6">
-                    {filteredBookings.length === 0 ? (
-                        <div className="bg-white/5 rounded-2xl p-12 text-center">
-                            <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                            <p className="text-gray-400 text-lg">لا توجد حجوزات</p>
-                        </div>
-                    ) : (
-                        filteredBookings.map((booking) => (
-                            <div
-                                key={booking.id}
-                                className="bg-[#1F2937] rounded-2xl p-6 border border-white/5 hover:border-gold/20 transition-all"
-                            >
-                                <div className="flex flex-col lg:flex-row gap-6">
-                                    {/* Main Info */}
-                                    <div className="flex-grow space-y-4">
-                                        <div className="flex items-start justify-between gap-4 flex-wrap">
-                                            <div>
-                                                <h3 className="text-2xl font-bold text-white mb-1">{booking.name}</h3>
-                                                <div className="flex items-center gap-2 text-gray-400">
-                                                    <Phone className="w-4 h-4" />
-                                                    <span className="font-mono">{booking.phone}</span>
+                    {/* Bookings Grid */}
+                    <div className="grid gap-6">
+                        {filteredBookings.length === 0 ? (
+                            <div className="bg-white/5 rounded-2xl p-12 text-center">
+                                <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                                <p className="text-gray-400 text-lg">لا توجد حجوزات</p>
+                            </div>
+                        ) : (
+                            filteredBookings.map((booking) => (
+                                <div
+                                    key={booking.id}
+                                    className="bg-[#1F2937] rounded-2xl p-6 border border-white/5 hover:border-gold/20 transition-all"
+                                >
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        {/* Main Info */}
+                                        <div className="flex-grow space-y-4">
+                                            <div className="flex items-start justify-between gap-4 flex-wrap">
+                                                <div>
+                                                    <h3 className="text-2xl font-bold text-white mb-1">{booking.name}</h3>
+                                                    <div className="flex items-center gap-2 text-gray-400">
+                                                        <Phone className="w-4 h-4" />
+                                                        <span className="font-mono">{booking.phone}</span>
+                                                    </div>
+                                                </div>
+                                                <span className={`px-4 py-2 rounded-xl text-sm font-bold border ${getStatusColor(booking.status)}`}>
+                                                    {booking.status}
+                                                </span>
+                                            </div>
+
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                <div className="flex items-center gap-2 text-gray-300">
+                                                    <User className="w-4 h-4 text-gold" />
+                                                    <span className="font-medium">المعلم: {booking.teacher}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-300">
+                                                    <Target className="w-4 h-4 text-gold" />
+                                                    <span className="font-medium">الهدف: {booking.goal}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-300">
+                                                    <Clock className="w-4 h-4 text-gold" />
+                                                    <span className="font-medium">المستوى: {booking.level}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-300">
+                                                    <Calendar className="w-4 h-4 text-gold" />
+                                                    <span className="font-medium">الإطار الزمني: {booking.timeline}</span>
                                                 </div>
                                             </div>
-                                            <span className={`px-4 py-2 rounded-xl text-sm font-bold border ${getStatusColor(booking.status)}`}>
-                                                {booking.status}
-                                            </span>
-                                        </div>
 
-                                        <div className="grid md:grid-cols-2 gap-4">
-                                            <div className="flex items-center gap-2 text-gray-300">
-                                                <User className="w-4 h-4 text-gold" />
-                                                <span className="font-medium">المعلم: {booking.teacher}</span>
+                                            <div className="flex gap-4 flex-wrap text-sm">
+                                                <div className="bg-white/5 px-3 py-1 rounded-lg">
+                                                    <span className="text-gray-400">الأيام: </span>
+                                                    <span className="text-white font-medium">{booking.days.join(', ')}</span>
+                                                </div>
+                                                <div className="bg-white/5 px-3 py-1 rounded-lg">
+                                                    <span className="text-gray-400">الأوقات: </span>
+                                                    <span className="text-white font-medium">{booking.times.join(', ')}</span>
+                                                </div>
+                                                <div className="bg-white/5 px-3 py-1 rounded-lg">
+                                                    <span className="text-gray-400">المصدر: </span>
+                                                    <span className="text-white font-medium">{booking.source}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-2 text-gray-300">
-                                                <Target className="w-4 h-4 text-gold" />
-                                                <span className="font-medium">الهدف: {booking.goal}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-gray-300">
-                                                <Clock className="w-4 h-4 text-gold" />
-                                                <span className="font-medium">المستوى: {booking.level}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-gray-300">
-                                                <Calendar className="w-4 h-4 text-gold" />
-                                                <span className="font-medium">الإطار الزمني: {booking.timeline}</span>
+
+                                            <div className="text-xs text-gray-500">
+                                                تم الإرسال: {new Date(booking.submittedAt).toLocaleString('ar-EG')}
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-4 flex-wrap text-sm">
-                                            <div className="bg-white/5 px-3 py-1 rounded-lg">
-                                                <span className="text-gray-400">الأيام: </span>
-                                                <span className="text-white font-medium">{booking.days.join(', ')}</span>
-                                            </div>
-                                            <div className="bg-white/5 px-3 py-1 rounded-lg">
-                                                <span className="text-gray-400">الأوقات: </span>
-                                                <span className="text-white font-medium">{booking.times.join(', ')}</span>
-                                            </div>
-                                            <div className="bg-white/5 px-3 py-1 rounded-lg">
-                                                <span className="text-gray-400">المصدر: </span>
-                                                <span className="text-white font-medium">{booking.source}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="text-xs text-gray-500">
-                                            تم الإرسال: {new Date(booking.submittedAt).toLocaleString('ar-EG')}
-                                        </div>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex lg:flex-col gap-2 flex-wrap">
-                                        <button
-                                            onClick={() => sendWhatsApp(booking)}
-                                            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all"
-                                        >
-                                            <MessageSquare className="w-4 h-4" />
-                                            <span>واتساب</span>
-                                        </button>
-                                        {booking.status === 'قيد الانتظار' && (
+                                        {/* Actions */}
+                                        <div className="flex lg:flex-col gap-2 flex-wrap">
                                             <button
-                                                onClick={() => updateStatus(booking.id, 'مؤكد')}
-                                                className="flex items-center gap-2 px-4 py-2 bg-gold hover:bg-gold-shiny text-midnight rounded-xl font-bold transition-all"
+                                                onClick={() => sendWhatsApp(booking)}
+                                                className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all"
                                             >
-                                                <CheckCircle className="w-4 h-4" />
-                                                <span>تأكيد</span>
+                                                <MessageSquare className="w-4 h-4" />
+                                                <span>واتساب</span>
                                             </button>
-                                        )}
-                                        {booking.status !== 'ملغي' && (
-                                            <button
-                                                onClick={() => updateStatus(booking.id, 'ملغي')}
-                                                className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-500 rounded-xl font-bold transition-all border border-red-500/20"
-                                            >
-                                                <XCircle className="w-4 h-4" />
-                                                <span>إلغاء</span>
-                                            </button>
-                                        )}
+                                            {booking.status === 'قيد الانتظار' && (
+                                                <button
+                                                    onClick={() => updateStatus(booking.id, 'مؤكد')}
+                                                    disabled={updatingId === booking.id}
+                                                    className={`flex items-center gap-2 px-4 py-2 bg-gold hover:bg-gold-shiny text-midnight rounded-xl font-bold transition-all ${updatingId === booking.id ? 'opacity-50 cursor-not-allowed' : ''
+                                                        }`}
+                                                >
+                                                    <CheckCircle className={`w-4 h-4 ${updatingId === booking.id ? 'animate-spin' : ''}`} />
+                                                    <span>{updatingId === booking.id ? 'جاري التأكيد...' : 'تأكيد'}</span>
+                                                </button>
+                                            )}
+                                            {booking.status !== 'ملغي' && (
+                                                <button
+                                                    onClick={() => updateStatus(booking.id, 'ملغي')}
+                                                    disabled={updatingId === booking.id}
+                                                    className={`flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-500 rounded-xl font-bold transition-all border border-red-500/20 ${updatingId === booking.id ? 'opacity-50 cursor-not-allowed' : ''
+                                                        }`}
+                                                >
+                                                    <XCircle className={`w-4 h-4 ${updatingId === booking.id ? 'animate-spin' : ''}`} />
+                                                    <span>{updatingId === booking.id ? 'جاري الإلغاء...' : 'إلغاء'}</span>
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    )}
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

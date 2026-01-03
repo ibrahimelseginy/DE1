@@ -1,12 +1,18 @@
+import dynamic from 'next/dynamic';
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Journey from "./components/Journey";
 import WhyUs from "./components/WhyUs";
 import Services from "./components/Services";
 import Teachers from "./components/Teachers";
-import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
-import FloatingSocials from "./components/FloatingSocials";
+
+// Lazy load components below the fold
+const Testimonials = dynamic(() => import("./components/Testimonials"), {
+  loading: () => <div className="min-h-[400px]" />,
+});
+const FloatingSocials = dynamic(() => import("./components/FloatingSocials"));
+
 import fs from 'fs';
 import path from 'path';
 
@@ -47,8 +53,8 @@ async function getTeachers() {
   return getTeachersLegacy();
 }
 
-// Enable ISR (Incremental Static Regeneration) - Revalidate every 5 minutes
-export const revalidate = 300; // 5 minutes in seconds
+// Enable ISR only in production
+export const revalidate = process.env.NODE_ENV === 'production' ? 300 : false;
 
 export default async function Home() {
   const teachers = await getTeachers();

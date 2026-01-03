@@ -11,9 +11,9 @@ export default function SWRProvider({ children }: { children: ReactNode }) {
                 fetcher,
                 revalidateOnFocus: true,
                 revalidateOnReconnect: true,
-                dedupingInterval: 5000, // 5 seconds
-                focusThrottleInterval: 10000, // 10 seconds
-                refreshInterval: 60000, // Auto-refresh every 60 seconds
+                dedupingInterval: 1000, // 1 second - faster deduping
+                focusThrottleInterval: 2000, // 2 seconds - faster focus revalidation
+                refreshInterval: 0, // No auto-refresh, only manual/optimistic updates
             }}
         >
             {children}

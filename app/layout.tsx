@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import { Alexandria, Lalezar } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./context/LanguageContext";
+import BackgroundWaves from "./components/BackgroundWaves";
 
 const alexandria = Alexandria({
   variable: "--font-alexandria",
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 const lalezar = Lalezar({
   variable: "--font-lalezar",
   subsets: ["arabic", "latin"],
-  weight: ["400"], // Lalezar only has 400
+  weight: "400",
   display: "swap",
 });
 
@@ -73,8 +74,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { LanguageProvider } from "./context/LanguageContext";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,6 +85,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${alexandria.variable} ${lalezar.variable} antialiased bg-midnight text-foreground`}
       >
+        <BackgroundWaves />
         <LanguageProvider>
           {children}
         </LanguageProvider>

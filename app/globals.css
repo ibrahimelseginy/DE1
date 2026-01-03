@@ -3,15 +3,14 @@
 :root {
   /* Midnight Blue Background */
   --background: #0B1121;
-  /* Off-white Text */
-  --foreground: #F8FAFC;
+  /* Off-white Text - أفتح للوضوح */
+  --foreground: #FFFFFF;
 
-  /* Custom Colors */
+  /* Custom Colors - ألوان أقوى */
   --midnight-blue: #0B1121;
-  --matte-gold: #c89e4c;
-  --shiny-gold: #b08d42;
-  --card-bg: #111827;
-  /* Gray 900 */
+  --matte-gold: #D4AF37;
+  --shiny-gold: #FFD700;
+  --card-bg: #1a1f2e;
 }
 
 @theme inline {
@@ -30,4 +29,70 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* تحسين وضوح النص */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Animations محسّنة للسرعة */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Fade in animation - سريعة */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* تحسين الـ scrolling */
+* {
+  scroll-behavior: smooth;
+}
+
+/* تحسين الـ focus للـ accessibility */
+*:focus-visible {
+  outline: 2px solid var(--matte-gold);
+  outline-offset: 2px;
+}
+
+/* تحسين الـ loading states */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-fast {
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

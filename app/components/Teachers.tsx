@@ -3,43 +3,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Clock, Award, Play } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-
+import useSWR from 'swr';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Teachers({ initialTeachers = [] }: { initialTeachers?: any[] }) {
     const { t, language } = useLanguage();
     const [currency, setCurrency] = React.useState<'EGP' | 'USD' | 'SAR' | 'KWD'>('EGP');
-    const [teachersList, setTeachersList] = React.useState<any[]>(initialTeachers);
-    // Remove individual loading state if data is passed from parent,
-    // or keep it false initially if data is present.
-    // If we want instant load, we rely on initialTeachers.
-    const loading = teachersList.length === 0 && initialTeachers.length === 0;
 
-    // We can keep a simplified effect if we ever need to re-fetch on client, 
-    // but for now, we assume parent passes data.
-    React.useEffect(() => {
-        if (initialTeachers.length > 0) {
-            setTeachersList(initialTeachers);
-        }
-    }, [initialTeachers]);
+    // Fetcher function for SWR
+    const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-    // If we still want to fetch as fallback (only if no props passed):
-    React.useEffect(() => {
-        if (initialTeachers.length === 0) {
-            const fetchTeachers = async () => {
-                try {
-                    const res = await fetch('/api/teachers');
-                    if (res.ok) {
-                        const data = await res.json();
-                        setTeachersList(data);
-                    }
-                } catch (error) {
-                    console.error("Failed to load teachers", error);
-                }
-            };
-            fetchTeachers();
-        }
-    }, [initialTeachers]);
+    // Use SWR for automatic revalidation and cache sync
+    const { data: teachersList, isLoading } = useSWR('/api/teachers', fetcher, {
+        fallbackData: initialTeachers,
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        refreshInterval: 0,
+    });
+
+    const loading = isLoading && (!teachersList || teachersList.length === 0);
 
     const currencies = [
         { code: 'EGP', label: 'EGP 🇪🇬' },
@@ -88,7 +71,7 @@ export default function Teachers({ initialTeachers = [] }: { initialTeachers?: a
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-                        {teachersList.map((teacher, idx) => {
+                        {teachersList?.map((teacher: any, idx: number) => {
                             const priceData = teacher.pricing?.prices?.[currency] || { price: 0, oldPrice: 0 };
 
                             // Helper to get localized content safely
@@ -109,9 +92,18 @@ export default function Teachers({ initialTeachers = [] }: { initialTeachers?: a
                                     {/* Image Area */}
                                     <div className="relative h-64 bg-slate-800 flex items-center justify-center overflow-hidden">
                                         <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent z-10"></div>
-                                        {/* Placeholder for Image */}
-                                        {/* <div className="text-gray-600 text-sm font-light">[صورة معلم]</div> */}
-                                        <img src={teacher.image} alt={getContent(teacher.name)} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                                        {/* Next.js Optimized Image */}
+                                        <div className="absolute inset-0 w-full h-full">
+                                            <Image
+                                                src={teacher.image || '/placeholder-teacher.jpg'}
+                                                alt={getContent(teacher.name)}
+                                                fill
+                                                className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                priority={idx < 3}
+                                                quality={85}
+                                            />
+                                        </div>
 
                                         {/* Play Button - Only if video exists, but for now generic */}
                                         {teacher.videoUrl && (

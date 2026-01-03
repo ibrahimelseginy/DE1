@@ -12,6 +12,7 @@ export const translations = {
             bookNow: 'احجز حصتك',
             readMore: 'اقرأ المزيد',
             copyright: 'جميع الحقوق محفوظة',
+            refundPrivacy: 'سياسة الاسترداد والخصوصية',
         },
         hero: {
             startJourney: "ابدأ رحلتك في التعلم اليوم",
@@ -233,6 +234,7 @@ export const translations = {
             bookNow: 'Book Now',
             readMore: 'Read More',
             copyright: 'All rights reserved',
+            refundPrivacy: 'Refund & Privacy Policy',
         },
         hero: {
             startJourney: "Start today",
@@ -454,6 +456,7 @@ export const translations = {
             bookNow: 'Jetzt buchen',
             readMore: 'Mehr lesen',
             copyright: 'Alle Rechte vorbehalten',
+            refundPrivacy: 'Rückerstattungs- und Datenschutzrichtlinie',
         },
         hero: {
             startJourney: "Starten Sie heute",

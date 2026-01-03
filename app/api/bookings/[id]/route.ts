@@ -1,28 +1,60 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import fs from 'fs';
+import path from 'path';
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+const dataFilePath = path.join(process.cwd(), 'app', 'data', 'bookings.json');
+
+const getBookingsFromJSON = () => {
+    if (!fs.existsSync(dataFilePath)) return [];
+    try {
+        const fileContent = fs.readFileSync(dataFilePath, 'utf8');
+        return JSON.parse(fileContent);
+    } catch (e) {
+        return [];
+    }
+};
+
+const saveBookingsToJSON = (bookings: any[]) => {
+    const dir = path.dirname(dataFilePath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(dataFilePath, JSON.stringify(bookings, null, 2));
+};
+
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id: idStr } = await params;
-        const id = Number(idStr);
+        const id = parseInt(idStr);
         const body = await request.json();
 
+        // In development, use JSON
+        if (process.env.NODE_ENV === 'development') {
+            const bookings = getBookingsFromJSON();
+            const index = bookings.findIndex((b: any) => b.id === id);
+
+            if (index === -1) {
+                return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+            }
+
+            bookings[index] = { ...bookings[index], ...body };
+            saveBookingsToJSON(bookings);
+
+            return NextResponse.json(bookings[index]);
+        }
+
+        // In production, use Prisma
+        const prisma = (await import('@/lib/prisma')).default;
         const updatedBooking = await prisma.booking.update({
             where: { id },
             data: body
         });
 
-        // Format for response if needed (handle JSON parsing for days/times if we were returning them, but for status update it matters little)
-        // But let's return it consistently
-        const formattedBooking = {
-            ...updatedBooking,
-            days: updatedBooking.days && updatedBooking.days.startsWith('[') ? JSON.parse(updatedBooking.days) : updatedBooking.days.split(','),
-            times: updatedBooking.times && updatedBooking.times.startsWith('[') ? JSON.parse(updatedBooking.times) : updatedBooking.times.split(',')
-        };
-
-        return NextResponse.json(formattedBooking);
+        return NextResponse.json(updatedBooking);
     } catch (error) {
         console.error('Update Error:', error);
         return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
     }
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    return PUT(request, { params });
 }

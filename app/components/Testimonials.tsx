@@ -42,9 +42,9 @@ export default function Testimonials() {
                         >
                             <Quote className={`absolute top-6 ${isRTL ? 'left-6' : 'right-6'} text-gold/20 w-10 h-10 group-hover:text-gold/40 transition-colors transform ${!isRTL ? 'scale-x-[-1]' : ''}`} />
 
-                            <div className="flex gap-1 mb-6">
+                            <div className="flex gap-1 mb-6" key={`stars-${idx}`}>
                                 {[...Array(review.rating)].map((_, i) => (
-                                    <Star key={i} className="w-4 h-4 text-gold fill-gold" />
+                                    <Star key={`star-${idx}-${i}`} className="w-4 h-4 text-gold fill-gold flex-shrink-0" />
                                 ))}
                             </div>
 
