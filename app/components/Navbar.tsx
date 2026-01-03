@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -35,30 +36,22 @@ export default function Navbar() {
         <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-midnight/90 backdrop-blur-md py-4 shadow-lg border-b border-white/5' : 'bg-transparent py-6'}`}>
             <div className="container mx-auto px-4 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-3 group">
-                    {/* Diamond Shape with DE1 */}
-                    <div className="relative w-12 h-12 md:w-14 md:h-14">
-                        {/* Background glow */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-gold to-gold-shiny rounded-lg rotate-45 opacity-20 blur-md group-hover:opacity-40 transition-opacity"></div>
-
-                        {/* Diamond border */}
-                        <div className="absolute inset-0 border-2 border-gold rounded-lg rotate-45 group-hover:border-gold-shiny transition-colors"></div>
-
-                        {/* DE1 Text */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-gold font-black text-lg md:text-xl tracking-tighter group-hover:text-gold-shiny transition-colors" style={{ fontFamily: 'var(--font-lalezar)' }}>
-                                DE1
-                            </span>
-                        </div>
+                <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+                    <div className="relative w-12 h-12 md:w-16 md:h-16 transition-transform group-hover:scale-105 duration-300">
+                        <Image
+                            src="/de1-logo.png"
+                            alt="DE1 Academy Logo"
+                            fill
+                            className="object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                            priority
+                        />
                     </div>
-
-                    {/* Academy Text */}
-                    <div className="flex flex-col">
-                        <span className="text-xl md:text-2xl font-bold text-gold group-hover:text-white transition-colors leading-none" style={{ fontFamily: 'var(--font-lalezar)' }}>
-                            DE1
+                    <div className="hidden sm:flex flex-col">
+                        <span className="text-lg md:text-xl font-bold text-gold group-hover:text-white transition-colors leading-none" style={{ fontFamily: 'var(--font-lalezar)' }}>
+                            DE1 Academy
                         </span>
-                        <span className="text-xs md:text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
-                            Academy
+                        <span className="text-[10px] md:text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+                            Tailored Language Paths
                         </span>
                     </div>
                 </Link>
