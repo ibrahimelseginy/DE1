@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
-import { Users, BookOpen, Clock, TrendingUp, Calendar, Check, X, Printer, Download, Plus } from 'lucide-react';
+import { Users, BookOpen, Clock, TrendingUp, Calendar, Check, X, Printer, Download, Plus, Eye } from 'lucide-react';
 
 export default function AdminDashboard() {
     // Use SWR for automatic caching and revalidation
@@ -10,6 +10,8 @@ export default function AdminDashboard() {
 
     const bookings = Array.isArray(bookingsRaw) ? bookingsRaw : [];
     const teachers = Array.isArray(teachersRaw) ? teachersRaw : [];
+
+    const [selectedBooking, setSelectedBooking] = React.useState<any>(null);
 
     const teacherCount = teachers.length;
     const bookingStats = React.useMemo(() => ({
@@ -571,6 +573,14 @@ export default function AdminDashboard() {
                                                         </button>
                                                     </>
                                                 )}
+                                                {/* View button - available for all bookings */}
+                                                <button
+                                                    onClick={() => setSelectedBooking(booking)}
+                                                    className="p-2 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500/20 transition-colors"
+                                                    title="عرض التفاصيل"
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
                                                 {/* Print button - available for all bookings */}
                                                 <button
                                                     onClick={() => handlePrintBooking(booking)}
@@ -695,6 +705,121 @@ export default function AdminDashboard() {
                                 className="flex-1 bg-white/5 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition-colors border border-white/10"
                             >
                                 إلغاء
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* View Booking Details Modal */}
+            {selectedBooking && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setSelectedBooking(null)}>
+                    <div className="bg-[#1F2937] rounded-2xl p-8 max-w-2xl w-full border border-white/10 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex justify-between items-start mb-8">
+                            <div>
+                                <h2 className="text-3xl font-bold text-gold mb-2">تفاصيل الحجز #{selectedBooking.id}</h2>
+                                <p className="text-gray-400">تاريخ الطلب: {new Date(selectedBooking.submittedAt).toLocaleDateString()} {new Date(selectedBooking.submittedAt).toLocaleTimeString()}</p>
+                            </div>
+                            <button onClick={() => setSelectedBooking(null)} className="text-gray-400 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="bg-black/20 p-5 rounded-xl border border-white/5">
+                                <h3 className="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">بيانات الطالب</h3>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">الاسم:</span>
+                                        <span className="text-white font-medium">{selectedBooking.name}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">الهاتف:</span>
+                                        <span className="text-white font-medium" dir="ltr">{selectedBooking.phone}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">المعلم:</span>
+                                        <span className="text-white font-medium">{selectedBooking.teacherName || selectedBooking.teacher || 'غير محدد'}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">الحالة:</span>
+                                        <span className={`px-2 py-0.5 rounded text-xs ${selectedBooking.status === 'مؤكد' ? 'bg-green-500/20 text-green-400' :
+                                            selectedBooking.status === 'ملغي' ? 'bg-red-500/20 text-red-400' :
+                                                'bg-yellow-500/20 text-yellow-400'
+                                            }`}>{selectedBooking.status}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-black/20 p-5 rounded-xl border border-white/5">
+                                <h3 className="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">تفاصيل الدورة</h3>
+                                <div className="space-y-3">
+                                    {selectedBooking.level && (
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">المستوى:</span>
+                                            <span className="text-white font-medium">{selectedBooking.level}</span>
+                                        </div>
+                                    )}
+                                    {selectedBooking.goal && (
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">الهدف:</span>
+                                            <span className="text-white font-medium">{selectedBooking.goal}</span>
+                                        </div>
+                                    )}
+                                    {selectedBooking.timeline && (
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">الإطار الزمني:</span>
+                                            <span className="text-white font-medium">{selectedBooking.timeline}</span>
+                                        </div>
+                                    )}
+                                    {selectedBooking.source && (
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">المصدر:</span>
+                                            <span className="text-white font-medium">{selectedBooking.source}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {(selectedBooking.days?.length > 0 || selectedBooking.times?.length > 0) && (
+                            <div className="mt-6 bg-black/20 p-5 rounded-xl border border-white/5">
+                                <h3 className="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">المواعيد المفضلة</h3>
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {Array.isArray(selectedBooking.days) && selectedBooking.days.map((day: string, i: number) => (
+                                        <span key={i} className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">{day}</span>
+                                    ))}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {Array.isArray(selectedBooking.times) && selectedBooking.times.map((time: string, i: number) => (
+                                        <span key={i} className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">{time}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {(selectedBooking.notes || selectedBooking.cancellationReason || selectedBooking.pendingReason) && (
+                            <div className="mt-6 bg-yellow-500/5 p-5 rounded-xl border border-yellow-500/10">
+                                <h3 className="text-lg font-bold text-yellow-500 mb-2">ملاحظات / أسباب</h3>
+                                <p className="text-gray-300 leading-relaxed">
+                                    {selectedBooking.notes || selectedBooking.cancellationReason || selectedBooking.pendingReason}
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="mt-8 pt-6 border-t border-white/10 flex justify-end gap-3">
+                            <button
+                                onClick={() => handlePrintBooking(selectedBooking)}
+                                className="flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-lg hover:bg-blue-500/20 transition-colors"
+                            >
+                                <Printer size={18} />
+                                <span>طباعة</span>
+                            </button>
+                            <button
+                                onClick={() => setSelectedBooking(null)}
+                                className="bg-white/10 text-white px-6 py-2 rounded-lg hover:bg-white/20 transition-colors font-bold"
+                            >
+                                إغلاق
                             </button>
                         </div>
                     </div>

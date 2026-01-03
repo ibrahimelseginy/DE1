@@ -158,6 +158,12 @@ export async function POST(request: Request) {
                 phone,
                 teacherId: String(teacherId),
                 teacherName: teacher || teacherName || 'Unknown',
+                goal,
+                level,
+                timeline,
+                days: days || [],
+                times: times || [],
+                source: source || 'Website',
                 status: 'قيد الانتظار (Mock)',
                 submittedAt: new Date().toISOString()
             };
