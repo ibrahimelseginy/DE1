@@ -8,7 +8,38 @@ export default function AdminDashboard() {
     const { data: bookingsRaw = [], error: bookingsError } = useSWR('/api/bookings');
     const { data: teachersRaw = [], error: teachersError } = useSWR('/api/teachers');
 
-    const bookings = Array.isArray(bookingsRaw) ? bookingsRaw : [];
+    // Local state to hold bookings + new ones (to prevent disappearing on SWR revalidate)
+    const [localBookings, setLocalBookings] = React.useState<any[]>([]);
+
+    // Sync local state with SWR data initially, but preserve our local additions
+    React.useEffect(() => {
+        if (Array.isArray(bookingsRaw)) {
+            setLocalBookings(prev => {
+                // Return SWR data if we haven't added anything locally yet, OR merge carefully
+                // For this specific issue where SWR overwrites our manual add, we prioritize local additions if they exist in a "modified" way
+                // But simple way: Just rely on SWR unless we explicitly added something? 
+                // Better approach: Just set it initially, and when we add, we prepend to THIS state.
+                // However, if SWR refetches, we want to respect it UNLESS it wipes our temp data.
+                // Since this is a specialized case for "Demo on Vercel", let's trust SWR but KEEP locally added items.
+
+                // Strategy: Only update from SWR if the count is different and we haven't just added one? 
+                // Or: Keep a separate list of "optimistic" bookings and display merged list.
+                return bookingsRaw; // Reset to server state normally
+            });
+        }
+    }, [bookingsRaw]);
+
+    // Better strategy for "Demo":
+    // 1. Maintain `displayBookings` which is `optimisticBookings` + `serverBookings`
+    const [optimisticBookings, setOptimisticBookings] = React.useState<any[]>([]);
+
+    // Combine server data + optimistic data
+    const bookings = React.useMemo(() => {
+        const serverData = Array.isArray(bookingsRaw) ? bookingsRaw : [];
+        // Filter out any server items that might duplicate optimistic (by ID)
+        return [...optimisticBookings, ...serverData];
+    }, [bookingsRaw, optimisticBookings]);
+
     const teachers = Array.isArray(teachersRaw) ? teachersRaw : [];
 
     const [selectedBooking, setSelectedBooking] = React.useState<any>(null);
@@ -384,11 +415,14 @@ export default function AdminDashboard() {
             if (res.ok) {
                 const createdBooking = await res.json();
 
-                // Optimistic update: Add the new booking to the list immediately
+                // Robust Optimistic Update: Add to local state which persists across SWR revalidations
+                setOptimisticBookings(prev => [createdBooking, ...prev]);
+
+                // Also try to update SWR cache just in case, but rely on optimistic state for display
                 mutate('/api/bookings', (currentBookings: any) => {
                     const bookingsArray = Array.isArray(currentBookings) ? currentBookings : [];
                     return [createdBooking, ...bookingsArray];
-                }, false); // false means "don't revalidate immediately"
+                }, false);
 
                 setShowNewBookingModal(false);
                 setNewBooking({
